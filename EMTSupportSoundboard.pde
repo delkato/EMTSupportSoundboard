@@ -4,7 +4,7 @@ import org.jaudiolibs.beads.*;
 
 //declare global variables at the top of your sketch
 //AudioContext ac; is declared in helper_functions
-SamplePlayer intermission, voice1, voice2;
+SamplePlayer bp1, btcold, bthot, hr1, pain1, rr1;
 ControlP5 cp5;
 Glide BPSysGlide, BPDiasGlide, HRGlide, RRGlide, BTGlide, PainGlide;
 
@@ -15,7 +15,12 @@ void setup() {
   size(320, 240); //size(width, height) must be the first line in setup()
   ac = new AudioContext(); //AudioContext ac; is declared in helper_functions
   cp5 = new ControlP5(this);
-  //intermission = getSamplePlayer("intermission.wav");
+  bp1 = getSamplePlayer("bp1.wav");
+  btcold = getSamplePlayer("btcold.wav");
+  bthot = getSamplePlayer("bthot.wav");
+  hr1 = getSamplePlayer("hr1.wav");
+  pain1 = getSamplePlayer("pain1.wav");
+  rr1 = getSamplePlayer("rr1.wav");
   
   BPSysGlide = new Glide(ac, 0.0, 50);
   BPDiasGlide = new Glide(ac, 0.0, 50);

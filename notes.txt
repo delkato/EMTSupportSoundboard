@@ -1,0 +1,7 @@
+Freesound files:
+  Blood Pressure 1: https://freesound.org/people/KorgMS2000B/sounds/54409/
+  Heart Rate 1: https://freesound.org/people/samfk360/sounds/148897/
+  Respiratory Rate 1: https://freesound.org/people/InspectorJ/sounds/402581/
+  Body Temperature Hot: https://freesound.org/people/beatmad/sounds/201936/
+  Body Temperature Cold: https://freesound.org/people/mixtus/sounds/351140/
+  Pain Level 1: https://freesound.org/people/thecheeseman/sounds/44430/
