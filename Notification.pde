@@ -1,6 +1,6 @@
 enum NotificationType { StatusUpdate, CommandResponse, Alert, CriticalAlert, SystemMessage, DataStream }
 enum Response { TurnOn }
-enum VitalType{ BP,HR, RR,BT,PL} //Blood pressure, heart rate, respir rate, body temp, pain level
+enum VitalType{ BPS, BPD , HR, RR,BT,PL} //Blood pressure, heart rate, respir rate, body temp, pain level
 
 
 //RR should have notice if breathing is impaired
