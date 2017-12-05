@@ -5,3 +5,37 @@ Freesound files:
   Body Temperature Hot: https://freesound.org/people/beatmad/sounds/201936/
   Body Temperature Cold: https://freesound.org/people/mixtus/sounds/351140/
   Pain Level 1: https://freesound.org/people/thecheeseman/sounds/44430/
+
+
+
+
+Notifications work like this.
+
+NotificationHandler has queue of notifications given.
+This needs to be given notifications from sensors that evaluate the patient health for bad signs (probably use timers to recheck)
+The sensor is currently not implemented, but takes place of midterm JSON stream.
+
+Notificationhandler receives those notifications, then calls handle
+Handle checks, if not already busy, to play the next notification if it meets requirements.
+
+Requirements are: PatientID exists in in patientList HashMap
+		vital of notification is focused, no vitals are focused at all, OR it is priority 3
+
+After those requirements, it calls play(notification) which returns a double
+That double calls a timer, which schedule a new handle task after the double from play has expired
+play should return the time of the sound clip or clips.
+
+
+
+
+Play should use logic to determine what type of sound plays for the notification.
+ 
+
+
+
+Things to do :
+
+-fill out play() to do logic and play sounds (notificationHandler)
+-create Sensor class to create notifications based on the patients. This can use some patient calls to determine state.
+- link buttons to changing state of patients and Focuses.
+

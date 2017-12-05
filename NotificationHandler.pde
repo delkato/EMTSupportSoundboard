@@ -14,8 +14,8 @@ class NotificationHandler {
     PriorityQueue<Notification> notificationPriorityQueue;
     boolean busy = false;
     boolean timed = false;
-    HashMap<VitalType,Boolean> vitals = new HashMap<VitalType,Boolean>();
-    HashMap<Integer,Boolean> patientList = new HashMap<Integer, Boolean>();
+    HashMap<VitalType,Boolean> vitals = new HashMap<VitalType,Boolean>(); //focus vital
+    HashMap<Integer,Boolean> patientList = new HashMap<Integer, Boolean>(); //added patients (NEED TO ADD A PATIENT FOCUS LIST + LOGIC)
     Timer timer;
       
       public NotificationHandler() {
@@ -92,15 +92,24 @@ class NotificationHandler {
       public double play(Notification notif){
         //define how to play the sounds based on notification, then return the time the clip will take
         
-          switch (notif.getType()){
+
             if(notif.getType()== NotificationType.StatusUpdate){ //play update sounds based on current patient health
+                
             }
            else if(notif.getType()== NotificationType.SystemResponse){//play system sounds like confirming a choice was made, or notes sent
            }
            else if(notif.getType()== NotificationType.Alert){//alert for when vitals go too far. get the notif.getVitalType(), then notif.getPatient().getState() to determine how critical, then present sound to emt
+             switch(notif.getVitalType()){
+               case BPS:
+               case BPD:
+               case HR:
+               case RR:
+               case BT:
+               case PL:
+             }
            }
             
-          }
+          
           return 0;
         }
 
