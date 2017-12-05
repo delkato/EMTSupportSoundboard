@@ -15,6 +15,7 @@ Patient patient1,patient2,patient3;
 Glide BPSysGlide, BPDiasGlide, HRGlide, RRGlide, BTGlide, PainGlide;
 Glide BPSysGlide2, BPDiasGlide2, HRGlide2, RRGlide2, BTGlide2, PainGlide2;
 Glide BPSysGlide3, BPDiasGlide3, HRGlide3, RRGlide3, BTGlide3, PainGlide3;
+CheckBox patientCheckBox;
 public static Comparator<Notification> idComparator;
 ArrayList<Notification> notifications;
 
@@ -81,7 +82,7 @@ void setup() {
    .setSize(100,30)
    .setLabel("Focus Patient");
    
-  cp5.addCheckBox("patientCheckBox")
+  patientCheckBox = cp5.addCheckBox("patientCheckBox")
     .setPosition(250, 80)
     .setColorForeground(color(120))
     .setColorActive(color(255))
@@ -530,6 +531,9 @@ public void healthButton3() {
 }
 
 public void addPatient() {
+  if (patientCheckBox.getState(10) == true) {
+    
+  }
 }
 public void removePatient() {
 }
