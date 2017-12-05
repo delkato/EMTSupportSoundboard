@@ -9,8 +9,6 @@ enum Level {High,Low}
 
 
 class Notification {
-   
-
   NotificationType type = null; 
   Patient patient = null;
   int patientID = 0;
@@ -20,9 +18,17 @@ class Notification {
   VitalType vital =null;
   int intensity = 0; //0 to 10 if distortion needed
   
-
-  public Notification() {
-
+  public Notification() { }
+  
+  public Notification(NotificationType type, Patient patient, int patientID, int priority, boolean busyIgnore, String message, VitalType vital, int intensity) {
+    this.type = type;
+    this.patient = patient;
+    this.patientID = patientID;
+    this.priority = priority;
+    this.busyIgnore = busyIgnore;
+    this.message = message;
+    this.vital = vital;
+    this.intensity = intensity;
   }
   public NotificationType getType() { return type; }
   public String getMessage() { return message; }
