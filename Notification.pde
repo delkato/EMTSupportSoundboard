@@ -1,7 +1,8 @@
-enum NotificationType { StatusUpdate, CommandResponse, Alert, CriticalAlert, SystemMessage, DataStream }
+enum NotificationType { StatusUpdate, SystemResponse, Alert}
 enum Response { TurnOn }
 enum VitalType{ BPS, BPD , HR, RR,BT,PL} //Blood pressure, heart rate, respir rate, body temp, pain level
-
+enum State {Normal, Moderate, Critical}
+enum Level {High,Low}
 
 //RR should have notice if breathing is impaired
 //HR should have indication of irregular heartbeat/palpitations
@@ -10,41 +11,16 @@ enum VitalType{ BPS, BPD , HR, RR,BT,PL} //Blood pressure, heart rate, respir ra
 class Notification {
    
 
-  NotificationType type; 
-  int patientID;
-  int priority;
-  boolean busyIgnore;
-  String message;
-  VitalType vital;
+  NotificationType type = null; 
+  Patient patient = null;
+  int patientID = 0;
+  int priority = 0; //0 to 3
+  boolean busyIgnore = false;
+  String message = null;
+  VitalType vital =null;
+  int intensity = 0; //0 to 10 if distortion needed
   
-  
-  public Notification(JSONObject json) {
-    
 
-    String typeString = json.getString("type");
-    
-    try {
-      this.type = NotificationType.valueOf(typeString);
-    }
-    catch (IllegalArgumentException e) {
-      throw new RuntimeException(typeString + " is not a valid value for enum NotificationType.");
-    }
-    
-    
-    if (json.isNull("message")) {
-      this.message = "";
-    }
-    else {
-      this.message = json.getString("message");
-    }
-    
-
-    this.priority = json.getInt("priority");
-    //1-4 levels (1 is lowest, 4 is highest)
-    
-
-                             
-  }
   public Notification() {
 
   }
@@ -52,6 +28,9 @@ class Notification {
   public String getMessage() { return message; }
   public int getPriorityLevel() { return priority; }
   public boolean getBusyIgnore() { return busyIgnore; }
+  public int getPatientID() { return patientID; }
+  public Patient getPatient() { return patient; }
+  public VitalType getVitalType() { return vital; }
 }
 
   
