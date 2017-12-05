@@ -18,6 +18,7 @@ class NotificationHandler {
     boolean timed = false;
     HashMap<VitalType,Boolean> vitals = new HashMap<VitalType,Boolean>(); //focus vital
     HashMap<Integer,Boolean> patientList = new HashMap<Integer, Boolean>(); //added patients (NEED TO ADD A PATIENT FOCUS LIST + LOGIC)
+    
     Timer timer;
       
       public NotificationHandler() {
@@ -44,8 +45,10 @@ class NotificationHandler {
                 
               }
               else if(patientList.get(current.getPatientID())!=null) {
+                println("check for focus");
                   if((vitals.get(current.getVitalType())!=null)|| vitals.isEmpty()){
                         timed = true;
+                        
                         double x = play(current);
                         timer = new Timer();
                         timer.schedule(new HandlerTask(), (long)x);   //x is the time to wait, given from play()
@@ -195,6 +198,17 @@ class NotificationHandler {
             
           
           return 0;
+        }
+        
+        public void addPatient(int input) {
+          patientList.put(input,false);
+          println("added " + input);
+          println(patientList.keySet());
+        }
+        public void removePatient(int input) {
+          patientList.remove(input);
+          println("removed " + input);
+          println(patientList.keySet());
         }
 
   public void ttsPlayback(String inputSpeech) {
