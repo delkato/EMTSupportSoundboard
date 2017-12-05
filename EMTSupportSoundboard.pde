@@ -11,11 +11,15 @@ import java.util.TimerTask;
 //AudioContext ac; is declared in helper_functions
 SamplePlayer bp1, btcold, bthot, hr1, pain1, rr1;
 ControlP5 cp5;
+Patient patient1,patient2,patient3;
 Glide BPSysGlide, BPDiasGlide, HRGlide, RRGlide, BTGlide, PainGlide;
+Glide BPSysGlide2, BPDiasGlide2, HRGlide2, RRGlide2, BTGlide2, PainGlide2;
+Glide BPSysGlide3, BPDiasGlide3, HRGlide3, RRGlide3, BTGlide3, PainGlide3;
 PriorityQueue<Notification> notificationPriorityQueue;
 public static Comparator<Notification> idComparator;
 ArrayList<Notification> notifications;
 
+CheckBox patientBox, vitalBox;
 
 //end global variables
 
@@ -52,6 +56,18 @@ void setup() {
   RRGlide = new Glide(ac, 0.0, 50);
   BTGlide = new Glide(ac, 0.0, 50);
   PainGlide = new Glide(ac, 0.0, 50);
+  BPSysGlide2 = new Glide(ac, 0.0, 50);
+  BPDiasGlide2 = new Glide(ac, 0.0, 50);
+  HRGlide2 = new Glide(ac, 0.0, 50);
+  RRGlide2 = new Glide(ac, 0.0, 50);
+  BTGlide2 = new Glide(ac, 0.0, 50);
+  PainGlide2 = new Glide(ac, 0.0, 50);
+  BPSysGlide3 = new Glide(ac, 0.0, 50);
+  BPDiasGlide3 = new Glide(ac, 0.0, 50);
+  HRGlide3 = new Glide(ac, 0.0, 50);
+  RRGlide3 = new Glide(ac, 0.0, 50);
+  BTGlide3 = new Glide(ac, 0.0, 50);
+  PainGlide3 = new Glide(ac, 0.0, 50);
   
   //User Input Side
   cp5.addButton("addPatient")
@@ -391,12 +407,23 @@ void setup() {
     .addItem("Breathing Obstructed 3", 0);
 
   //ac.out.addInput();
+  
+  
+  
+  patient1 = new Patient((int)BPSysGlide.getValue(), (int)BPDiasGlide.getValue(),(int)HRGlide.getValue(), (int)RRGlide.getValue(), BTGlide.getValue(), (int)PainGlide.getValue());
+  patient1 = new Patient((int)BPSysGlide2.getValue(), (int)BPDiasGlide2.getValue(),(int)HRGlide2.getValue(), (int)RRGlide2.getValue(), BTGlide2.getValue(), (int)PainGlide2.getValue());
+  patient1 = new Patient((int)BPSysGlide3.getValue(), (int)BPDiasGlide3.getValue(),(int)HRGlide3.getValue(), (int)RRGlide3.getValue(), BTGlide3.getValue(), (int)PainGlide3.getValue());
+  
+  Glide BPSysGlide, BPDiasGlide, HRGlide, RRGlide, BTGlide, PainGlide;
+Glide BPSysGlide2, BPDiasGlide2, HRGlide2, RRGlide2, BTGlide2, PainGlide2;
+Glide BPSysGlide3, BPDiasGlide3, HRGlide3, RRGlide3, BTGlide3, PainGlide3;
   ac.start();
 }
 
 void draw() {
   background(0);  //fills the canvas with black (0) each frame
 }
+
 
 public void BPSysSlider1(int newGain) {
   BPSysGlide.setValue(newGain/100.0);
@@ -422,48 +449,74 @@ public void PainSlider1(int newGain) {
   PainGlide.setValue(newGain/100.0);
 }
 public void BPSysSlider2(int newGain) {
-  BPSysGlide.setValue(newGain/100.0);
+  BPSysGlide2.setValue(newGain/100.0);
 }
 
 public void BPDiasSlider2(int newGain) {
-  BPDiasGlide.setValue(newGain/100.0);
+  BPDiasGlide2.setValue(newGain/100.0);
 }
 
 public void HRSlider2(int newGain) {
-  HRGlide.setValue(newGain/100.0);
+  HRGlide2.setValue(newGain/100.0);
 }
 
 public void RRSlider2(int newGain) {
-  RRGlide.setValue(newGain/100.0);
+  RRGlide2.setValue(newGain/100.0);
 }
 
 public void BTSlider2(float newGain) {
-  BTGlide.setValue(newGain/100.0);
+  BTGlide2.setValue(newGain/100.0);
 }
 
 public void PainSlider2(int newGain) {
-  PainGlide.setValue(newGain/100.0);
+  PainGlide2.setValue(newGain/100.0);
 }
 public void BPSysSlider3(int newGain) {
-  BPSysGlide.setValue(newGain/100.0);
+  BPSysGlide3.setValue(newGain/100.0);
 }
 
 public void BPDiasSlider3(int newGain) {
-  BPDiasGlide.setValue(newGain/100.0);
+  BPDiasGlide3.setValue(newGain/100.0);
 }
 
 public void HRSlider3(int newGain) {
-  HRGlide.setValue(newGain/100.0);
+  HRGlide3.setValue(newGain/100.0);
 }
 
 public void RRSlider3(int newGain) {
-  RRGlide.setValue(newGain/100.0);
+  RRGlide3.setValue(newGain/100.0);
 }
 
 public void BTSlider3(float newGain) {
-  BTGlide.setValue(newGain/100.0);
+  BTGlide3.setValue(newGain/100.0);
 }
 
 public void PainSlider3(int newGain) {
-  PainGlide.setValue(newGain/100.0);
+  PainGlide3.setValue(newGain/100.0);
+}
+public void healthButton1() {
+  
+}
+public void healthButton2() {
+}
+public void healthButton3() {
+}
+
+public void addPatient() {
+}
+public void removePatient() {
+}
+public void patientFocus() {
+}
+public void patientCheckBox() {
+}
+public void vitalFocus() {
+}
+public void removeVitalFocus() {
+}
+public void vitalCheckBox() {
+}
+public void addNotes() {
+}
+public void sendNotes() {
 }
