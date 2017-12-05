@@ -7,20 +7,34 @@ class Patient {
   float BTemp;
   int TargetBPSys, TargetBPDias, TargetHRate, TargetRRate, TargetPLevel;
   float TargetBTemp;
-  public Patient(int BPS, int BPD, int HR, int RR, float BT, int PL){
+  int patientID;
+  Sensor sensor;
+  
+  public Patient(int patientID, int BPS, int BPD, int HR, int RR, float BT, int PL){
+    this.patientID = patientID;
     BPSys = BPS;
     BPDias = BPD;
     HRate = HR;
     RRate = RR;
     BTemp = BT;
     PLevel = PL;
+    sensor = new Sensor(this);
   }
   public int getSystolicBloodPressure() { return BPSys; }
   public int getDiastolicBloodPressure() { return BPDias; }
   public int getHeartRate() { return HRate; }
   public int getRespiratoryRate() { return RRate; }
   public float getBodyTemperature() { return BTemp; }
-  public int getPainLevel() { return BPSys; }
+  public int getPainLevel() { return PLevel; }
+  public int getPatientID() { return patientID; }
+  public Sensor getSensor() { return sensor; }
+  
+  public void setSystolicBloodPressure(int BPSys) { this.BPSys = BPSys; }
+  public void setDiastolicBloodPressure(int BPDias) { this.BPDias = BPDias; }
+  public void setHeartRate(int HRate) { this.HRate = HRate; }
+  public void setRespiratoryRate(int RRate) { this.RRate = RRate; }
+  public void setBodyTemperature(float BTemp) { this.BTemp = BTemp; }
+  public void setPainLevel(int PLevel) { this.PLevel = PLevel; }
   
   //immediate update of values
   public void updateVital(VitalType vital, float input) {
@@ -217,11 +231,6 @@ class Patient {
       }
   }
   
-  
-  
-  
-  
-  
   class VitalTask extends TimerTask {
     VitalType vitalT;
     public VitalTask(VitalType in) {
@@ -232,6 +241,4 @@ class Patient {
       transitionVital(vitalT);
     }
   }
-
-
 }

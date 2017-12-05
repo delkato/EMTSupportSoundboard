@@ -9,12 +9,13 @@ import java.util.TimerTask;
 
 //declare global variables at the top of your sketch
 //AudioContext ac; is declared in helper_functions
-SamplePlayer bp1, btcold, bthot, hr1, pain1, rr1;
+SamplePlayer bp1, btcold, bthot, hr1, pain1, rr1, feedback;
 ControlP5 cp5;
 Patient patient1,patient2,patient3;
 Glide BPSysGlide, BPDiasGlide, HRGlide, RRGlide, BTGlide, PainGlide;
 Glide BPSysGlide2, BPDiasGlide2, HRGlide2, RRGlide2, BTGlide2, PainGlide2;
 Glide BPSysGlide3, BPDiasGlide3, HRGlide3, RRGlide3, BTGlide3, PainGlide3;
+CheckBox patientCheckBox;
 public static Comparator<Notification> idComparator;
 ArrayList<Notification> notifications;
 
@@ -38,15 +39,13 @@ void setup() {
       }
     };
   
-  
-  
-  
   bp1 = getSamplePlayer("bp1.wav");
   btcold = getSamplePlayer("btcold.wav");
   bthot = getSamplePlayer("bthot.wav");
   hr1 = getSamplePlayer("hr1.wav");
   pain1 = getSamplePlayer("pain1.wav");
   rr1 = getSamplePlayer("rr1.wav");
+  feedback = getSamplePlayer("feedback.wav");
   
   BPSysGlide = new Glide(ac, 0.0, 50);
   BPDiasGlide = new Glide(ac, 0.0, 50);
@@ -83,7 +82,7 @@ void setup() {
    .setSize(100,30)
    .setLabel("Focus Patient");
    
-  cp5.addCheckBox("patientCheckBox")
+  patientCheckBox = cp5.addCheckBox("patientCheckBox")
     .setPosition(250, 80)
     .setColorForeground(color(120))
     .setColorActive(color(255))
@@ -406,22 +405,36 @@ void setup() {
 
   //ac.out.addInput();
   
-  
-  
-  patient1 = new Patient((int)BPSysGlide.getValue(), (int)BPDiasGlide.getValue(),(int)HRGlide.getValue(), (int)RRGlide.getValue(), BTGlide.getValue(), (int)PainGlide.getValue());
-  patient1 = new Patient((int)BPSysGlide2.getValue(), (int)BPDiasGlide2.getValue(),(int)HRGlide2.getValue(), (int)RRGlide2.getValue(), BTGlide2.getValue(), (int)PainGlide2.getValue());
-  patient1 = new Patient((int)BPSysGlide3.getValue(), (int)BPDiasGlide3.getValue(),(int)HRGlide3.getValue(), (int)RRGlide3.getValue(), BTGlide3.getValue(), (int)PainGlide3.getValue());
+  patient1 = new Patient(1, (int)BPSysGlide.getValue(), (int)BPDiasGlide.getValue(),(int)HRGlide.getValue(), (int)RRGlide.getValue(), BTGlide.getValue(), (int)PainGlide.getValue());
+  patient2 = new Patient(2, (int)BPSysGlide2.getValue(), (int)BPDiasGlide2.getValue(),(int)HRGlide2.getValue(), (int)RRGlide2.getValue(), BTGlide2.getValue(), (int)PainGlide2.getValue());
+  patient3 = new Patient(3, (int)BPSysGlide3.getValue(), (int)BPDiasGlide3.getValue(),(int)HRGlide3.getValue(), (int)RRGlide3.getValue(), BTGlide3.getValue(), (int)PainGlide3.getValue());
   
   Glide BPSysGlide, BPDiasGlide, HRGlide, RRGlide, BTGlide, PainGlide;
-Glide BPSysGlide2, BPDiasGlide2, HRGlide2, RRGlide2, BTGlide2, PainGlide2;
-Glide BPSysGlide3, BPDiasGlide3, HRGlide3, RRGlide3, BTGlide3, PainGlide3;
+  Glide BPSysGlide2, BPDiasGlide2, HRGlide2, RRGlide2, BTGlide2, PainGlide2;
+  Glide BPSysGlide3, BPDiasGlide3, HRGlide3, RRGlide3, BTGlide3, PainGlide3;
+  
+  bp1.pause(true);
+  btcold.pause(true);
+  bthot.pause(true);
+  hr1.pause(true);
+  pain1.pause(true);
+  rr1.pause(true);
+  feedback.pause(true);
+  
+  ac.out.addInput(bp1);
+  ac.out.addInput(btcold);
+  ac.out.addInput(bthot);
+  ac.out.addInput(hr1);
+  ac.out.addInput(pain1);
+  ac.out.addInput(rr1);
+  ac.out.addInput(feedback);
+  
   ac.start();
 }
 
 void draw() {
   background(0);  //fills the canvas with black (0) each frame
 }
-
 
 public void BPSysSlider1(int newGain) {
   BPSysGlide.setValue(newGain/100.0);
@@ -493,14 +506,34 @@ public void PainSlider3(int newGain) {
   PainGlide3.setValue(newGain/100.0);
 }
 public void healthButton1() {
-  
+  patient1.setSystolicBloodPressure((int)BPSysGlide.getValue());
+  patient1.setDiastolicBloodPressure((int)BPDiasGlide.getValue());
+  patient1.setHeartRate((int)HRGlide.getValue());
+  patient1.setRespiratoryRate((int)RRGlide.getValue());
+  patient1.setBodyTemperature((int)BTGlide.getValue());
+  patient1.setPainLevel((int)PainGlide.getValue());
 }
 public void healthButton2() {
+  patient2.setSystolicBloodPressure((int)BPSysGlide2.getValue());
+  patient2.setDiastolicBloodPressure((int)BPDiasGlide2.getValue());
+  patient2.setHeartRate((int)HRGlide2.getValue());
+  patient2.setRespiratoryRate((int)RRGlide2.getValue());
+  patient2.setBodyTemperature((int)BTGlide2.getValue());
+  patient2.setPainLevel((int)PainGlide2.getValue());
 }
 public void healthButton3() {
+  patient3.setSystolicBloodPressure((int)BPSysGlide3.getValue());
+  patient3.setDiastolicBloodPressure((int)BPDiasGlide3.getValue());
+  patient3.setHeartRate((int)HRGlide3.getValue());
+  patient3.setRespiratoryRate((int)RRGlide3.getValue());
+  patient3.setBodyTemperature((int)BTGlide3.getValue());
+  patient3.setPainLevel((int)PainGlide3.getValue());
 }
 
 public void addPatient() {
+  if (patientCheckBox.getState(10) == true) {
+    
+  }
 }
 public void removePatient() {
 }
