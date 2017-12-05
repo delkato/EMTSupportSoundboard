@@ -8,6 +8,8 @@ enum VitalType{ BP,HR, RR, BT, PL} //Blood pressure, heart rate, respir rate, bo
 
 
 class Notification {
+  TextToSpeechMaker ttsMaker;
+  SamplePlayer textToSpeech;
   int patientID;
   int priority; // 3 priority levels, 3 being highest
   boolean busyIgnore;
@@ -16,6 +18,7 @@ class Notification {
   public Notification() { }
   
   public Notification(int patientID, boolean busyIgnore, VitalType vital) {
+    this.ttsMaker = new TextToSpeechMaker();
     this.patientID = patientID;
     this.busyIgnore = busyIgnore;
     this.priority = 3;
@@ -23,6 +26,7 @@ class Notification {
   }
   
   public Notification(int patientID, boolean busyIgnore, int priority, VitalType vital) {
+    this.ttsMaker = new TextToSpeechMaker();
     this.patientID = patientID;
     this.busyIgnore = busyIgnore;
     this.priority = priority;
@@ -63,8 +67,19 @@ class Notification {
       pain1.setToLoopStart();
       pain1.start();
     } else {
-      System.out.println("ERROR: Invalid vital type " +  vital);
+      ttsPlayback("Patient " + patientID + " unconscious");
     }
+  }
+  
+  public void ttsPlayback(String inputSpeech) {
+    delay(1000);
+    String ttsFilePath = ttsMaker.createTTSWavFile(inputSpeech);
+    textToSpeech = getSamplePlayer(ttsFilePath, false);
+    ac.out.addInput(textToSpeech);
+    textToSpeech.setToLoopStart();
+    textToSpeech.start();
+    int wait = (int) textToSpeech.getSample().getLength() + 1000;
+    delay(wait);
   }
 }
   
