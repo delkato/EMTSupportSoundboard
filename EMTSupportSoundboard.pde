@@ -38,9 +38,6 @@ void setup() {
       }
     };
   
-  
-  
-  
   bp1 = getSamplePlayer("bp1.wav");
   btcold = getSamplePlayer("btcold.wav");
   bthot = getSamplePlayer("bthot.wav");
@@ -440,44 +437,26 @@ void draw() {
 
 public void BPSysSlider1(int newGain) {
   BPSysGlide.setValue(newGain/100.0);
-  if (patient1 != null) {
-    patient1.setSystolicBloodPressure((int)BPSysGlide.getValue());
-  }
 }
 
 public void BPDiasSlider1(int newGain) {
   BPDiasGlide.setValue(newGain/100.0);
-  if (patient1 != null) {
-    patient1.setDiastolicBloodPressure((int)BPDiasGlide.getValue());
-  }
 }
 
 public void HRSlider1(int newGain) {
   HRGlide.setValue(newGain/100.0);
-  if (patient1 != null) {
-    patient1.setHeartRate((int)HRGlide.getValue());
-  }
 }
 
 public void RRSlider1(int newGain) {
   RRGlide.setValue(newGain/100.0);
-  if (patient1 != null) {
-    patient1.setRespiratoryRate((int)RRGlide.getValue());
-  }
 }
 
 public void BTSlider1(float newGain) {
   BTGlide.setValue(newGain/100.0);
-  if (patient1 != null) {
-    patient1.setBodyTemperature((int)BTGlide.getValue());
-  }
 }
 
 public void PainSlider1(int newGain) {
   PainGlide.setValue(newGain/100.0);
-  if (patient1 != null) {
-    patient1.setPainLevel((int)PainGlide.getValue());
-  }
 }
 public void BPSysSlider2(int newGain) {
   BPSysGlide2.setValue(newGain/100.0);
@@ -526,10 +505,28 @@ public void PainSlider3(int newGain) {
   PainGlide3.setValue(newGain/100.0);
 }
 public void healthButton1() {
+  patient1.setSystolicBloodPressure((int)BPSysGlide.getValue());
+  patient1.setDiastolicBloodPressure((int)BPDiasGlide.getValue());
+  patient1.setHeartRate((int)HRGlide.getValue());
+  patient1.setRespiratoryRate((int)RRGlide.getValue());
+  patient1.setBodyTemperature((int)BTGlide.getValue());
+  patient1.setPainLevel((int)PainGlide.getValue());
 }
 public void healthButton2() {
+  patient2.setSystolicBloodPressure((int)BPSysGlide2.getValue());
+  patient2.setDiastolicBloodPressure((int)BPDiasGlide2.getValue());
+  patient2.setHeartRate((int)HRGlide2.getValue());
+  patient2.setRespiratoryRate((int)RRGlide2.getValue());
+  patient2.setBodyTemperature((int)BTGlide2.getValue());
+  patient2.setPainLevel((int)PainGlide2.getValue());
 }
 public void healthButton3() {
+  patient3.setSystolicBloodPressure((int)BPSysGlide3.getValue());
+  patient3.setDiastolicBloodPressure((int)BPDiasGlide3.getValue());
+  patient3.setHeartRate((int)HRGlide3.getValue());
+  patient3.setRespiratoryRate((int)RRGlide3.getValue());
+  patient3.setBodyTemperature((int)BTGlide3.getValue());
+  patient3.setPainLevel((int)PainGlide3.getValue());
 }
 
 public void addPatient() {
