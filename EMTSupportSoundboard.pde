@@ -35,10 +35,6 @@ void setup() {
   };
   notificationPriorityQueue = new PriorityQueue<Notification>(20,idComparator);
   
-  
-  
-  
-  
   bp1 = getSamplePlayer("bp1.wav");
   btcold = getSamplePlayer("btcold.wav");
   bthot = getSamplePlayer("bthot.wav");
@@ -122,19 +118,11 @@ void setup() {
      .setColor(color(255,0,0))
      ;
 
-
-
-  
-  
-  
   cp5.addButton("sendNotes")
    .setPosition(100,400)
    .setSize(100,30)
    .setLabel("Send Notes");
    
-   
-   
-  
   //PATIENT 1
   cp5.addTextlabel("label")
       .setText("Patient 1")
@@ -390,6 +378,12 @@ void setup() {
     .addItem("Unconscious 3", 0)
     .addItem("Breathing Obstructed 3", 0);
 
+  bp1.pause(true);
+  btcold.pause(true);
+  bthot.pause(true);
+  hr1.pause(true);
+  pain1.pause(true);
+  rr1.pause(true);
   //ac.out.addInput();
   ac.start();
 }
