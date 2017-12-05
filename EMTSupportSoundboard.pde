@@ -1,12 +1,21 @@
 import controlP5.*;
 import beads.*;
 import org.jaudiolibs.beads.*;
+import java.util.Comparator;
+import java.util.PriorityQueue;
+import java.util.Timer;
+import java.util.TimerTask;
+
 
 //declare global variables at the top of your sketch
 //AudioContext ac; is declared in helper_functions
 SamplePlayer bp1, btcold, bthot, hr1, pain1, rr1;
 ControlP5 cp5;
 Glide BPSysGlide, BPDiasGlide, HRGlide, RRGlide, BTGlide, PainGlide;
+PriorityQueue<Notification> notificationPriorityQueue;
+public static Comparator<Notification> idComparator;
+ArrayList<Notification> notifications;
+
 
 //end global variables
 
@@ -15,6 +24,21 @@ void setup() {
   size(1280, 720); //size(width, height) must be the first line in setup()
   ac = new AudioContext(); //AudioContext ac; is declared in helper_functions
   cp5 = new ControlP5(this);
+  
+  idComparator = new Comparator<Notification>(){
+    @Override
+    public int compare(Notification c1, Notification c2) {
+      if(  c1.getPriorityLevel()>c2.getPriorityLevel()) {  return -1;  }
+      else if (  c1.getPriorityLevel()<c2.getPriorityLevel()){  return 1; }
+            else{  return 0;}  
+    }
+  };
+  notificationPriorityQueue = new PriorityQueue<Notification>(20,idComparator);
+  
+  
+  
+  
+  
   bp1 = getSamplePlayer("bp1.wav");
   btcold = getSamplePlayer("btcold.wav");
   bthot = getSamplePlayer("bthot.wav");
@@ -138,50 +162,62 @@ void setup() {
   cp5.addSlider("BPSysSlider1")
     .setPosition(1000,10)
     .setSize(15,100)
-    .setRange(0,100)
-    .setValue(50)
+    .setRange(0,220)
+    .setValue(120)
     .setLabel("BPS")
     ;
   // Vertical Blood Pressure Slider
   cp5.addSlider("BPDiasSlider1")
     .setPosition(1040,10)
     .setSize(15,100)
-    .setRange(0,100)
-    .setValue(50)
+    .setRange(0,160)
+    .setValue(80)
     .setLabel("BPD")
     ;
   // Vertical Heart Rate Slider
   cp5.addSlider("HRSlider1")
     .setPosition(1080,10)
     .setSize(15,100)
-    .setRange(0,100)
-    .setValue(50)
+    .setRange(0,220)
+    .setValue(80)
     .setLabel("HR")
     ;
   // Vertical Respiratory Rate Slider
   cp5.addSlider("RRSlider1")
     .setPosition(1120,10)
     .setSize(15,100)
-    .setRange(0,100)
-    .setValue(50)
+    .setRange(0,30)
+    .setValue(12)
     .setLabel("RR")
     ;
   // Vertical Body Temp Slider
   cp5.addSlider("BTSlider1")
     .setPosition(1160,10)
     .setSize(15,100)
-    .setRange(0,100)
-    .setValue(50)
+    .setRange(95,106)
+    .setValue(98.6)
     .setLabel("BT")
     ;
   // Vertical Pain Level Slider
   cp5.addSlider("PainSlider1")
-    .setPosition(1200,10)
+    .setPosition(1205,10)
     .setSize(15,100)
-    .setRange(0,100)
-    .setValue(50)
+    .setRange(0,10)
+    .setValue(5)
     .setLabel("Pain")
     ;
+   cp5.addCheckBox("Afflictions1")
+    .setPosition(950, 150)
+    .setColorForeground(color(120))
+    .setColorActive(color(255))
+    .setColorLabel(color(255))
+    .setSize(10, 10)
+    .setItemsPerRow(3)
+    .setSpacingColumn(80)
+    .setSpacingRow(20)
+    .addItem("HR Irregular 1", 0)
+    .addItem("Unconscious 1", 0)
+    .addItem("Breathing Obstructed 1", 0);
     
     
     
@@ -212,51 +248,64 @@ void setup() {
   cp5.addSlider("BPSysSlider2")
     .setPosition(1000,260)
     .setSize(15,100)
-    .setRange(0,100)
-    .setValue(50)
+    .setRange(0,220)
+    .setValue(120)
     .setLabel("BPS")
     ;
   // Vertical Blood Pressure Slider
   cp5.addSlider("BPDiasSlider2")
     .setPosition(1040,260)
     .setSize(15,100)
-    .setRange(0,100)
-    .setValue(50)
+    .setRange(0,160)
+    .setValue(80)
     .setLabel("BPD")
     ;
   // Vertical Heart Rate Slider
   cp5.addSlider("HRSlider2")
     .setPosition(1080,260)
     .setSize(15,100)
-    .setRange(0,100)
-    .setValue(50)
+    .setRange(0,220)
+    .setValue(80)
     .setLabel("HR")
     ;
   // Vertical Respiratory Rate Slider
   cp5.addSlider("RRSlider2")
     .setPosition(1120,260)
     .setSize(15,100)
-    .setRange(0,100)
-    .setValue(50)
+    .setRange(0,30)
+    .setValue(12)
     .setLabel("RR")
     ;
   // Vertical Body Temp Slider
   cp5.addSlider("BTSlider2")
     .setPosition(1160,260)
     .setSize(15,100)
-    .setRange(0,100)
-    .setValue(50)
+    .setRange(95,106)
+    .setValue(98.6)
     .setLabel("BT")
     ;
   // Vertical Pain Level Slider
   cp5.addSlider("PainSlider2")
-    .setPosition(1200,260)
+    .setPosition(1205,260)
     .setSize(15,100)
-    .setRange(0,100)
-    .setValue(50)
+    .setRange(0,10)
+    .setValue(5)
     .setLabel("Pain")
     ;
-     
+   cp5.addCheckBox("Afflictions2")
+    .setPosition(950, 400)
+    .setColorForeground(color(120))
+    .setColorActive(color(255))
+    .setColorLabel(color(255))
+    .setSize(10, 10)
+    .setItemsPerRow(3)
+    .setSpacingColumn(80)
+    .setSpacingRow(20)
+    .addItem("HR Irregular 2", 0)
+    .addItem("Unconscious 2", 0)
+    .addItem("Breathing Obstructed 2", 0);
+    
+    
     //PATIENT 3
   cp5.addTextlabel("label3")
       .setText("Patient 3")
@@ -281,53 +330,65 @@ void setup() {
    .setSize(80,30)
    .setLabel("Submit Changes");
   // Vertical Blood Pressure Slider
-  cp5.addSlider("BPSysSlider2")
+  cp5.addSlider("BPSysSlider3")
     .setPosition(1000,510)
     .setSize(15,100)
-    .setRange(0,100)
-    .setValue(50)
+    .setRange(0,220)
+    .setValue(120)
     .setLabel("BPS")
     ;
   // Vertical Blood Pressure Slider
   cp5.addSlider("BPDiasSlider3")
     .setPosition(1040,510)
     .setSize(15,100)
-    .setRange(0,100)
-    .setValue(50)
+    .setRange(0,160)
+    .setValue(80)
     .setLabel("BPD")
     ;
   // Vertical Heart Rate Slider
   cp5.addSlider("HRSlider3")
     .setPosition(1080,510)
     .setSize(15,100)
-    .setRange(0,100)
-    .setValue(50)
+    .setRange(0,220)
+    .setValue(80)
     .setLabel("HR")
     ;
   // Vertical Respiratory Rate Slider
   cp5.addSlider("RRSlider3")
     .setPosition(1120,510)
     .setSize(15,100)
-    .setRange(0,100)
-    .setValue(50)
+    .setRange(0,30)
+    .setValue(12)
     .setLabel("RR")
     ;
   // Vertical Body Temp Slider
   cp5.addSlider("BTSlider3")
     .setPosition(1160,510)
     .setSize(15,100)
-    .setRange(0,100)
-    .setValue(50)
+    .setRange(95,106)
+    .setValue(98.6)
     .setLabel("BT")
     ;
   // Vertical Pain Level Slider
   cp5.addSlider("PainSlider3")
-    .setPosition(1200,510)
+    .setPosition(1205,510)
     .setSize(15,100)
-    .setRange(0,100)
-    .setValue(50)
+    .setRange(0,10)
+    .setValue(5)
     .setLabel("Pain")
     ;
+  cp5.addCheckBox("Afflictions3")
+    .setPosition(950, 650)
+    .setColorForeground(color(120))
+    .setColorActive(color(255))
+    .setColorLabel(color(255))
+    .setSize(10, 10)
+    .setItemsPerRow(3)
+    .setSpacingColumn(80)
+    .setSpacingRow(20)
+    .addItem("HR Irregular 3", 0)
+    .addItem("Unconscious 3", 0)
+    .addItem("Breathing Obstructed 3", 0);
 
   //ac.out.addInput();
   ac.start();
@@ -353,7 +414,7 @@ public void RRSlider1(int newGain) {
   RRGlide.setValue(newGain/100.0);
 }
 
-public void BTSlider1(int newGain) {
+public void BTSlider1(float newGain) {
   BTGlide.setValue(newGain/100.0);
 }
 
@@ -376,7 +437,7 @@ public void RRSlider2(int newGain) {
   RRGlide.setValue(newGain/100.0);
 }
 
-public void BTSlider2(int newGain) {
+public void BTSlider2(float newGain) {
   BTGlide.setValue(newGain/100.0);
 }
 
@@ -399,7 +460,7 @@ public void RRSlider3(int newGain) {
   RRGlide.setValue(newGain/100.0);
 }
 
-public void BTSlider3(int newGain) {
+public void BTSlider3(float newGain) {
   BTGlide.setValue(newGain/100.0);
 }
 
