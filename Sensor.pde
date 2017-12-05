@@ -10,7 +10,7 @@ class Sensor {
     nh = new NotificationHandler();
     timer = new Timer();
     // timer set to update states every 10 seconds
-    timer.schedule(new UpdatePatientStates(), 1000);
+    timer.schedule(new UpdatePatientStates(), 10000);
   }
   
   public void updatePatientStates() {
