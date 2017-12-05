@@ -15,7 +15,6 @@ Patient patient1,patient2,patient3;
 Glide BPSysGlide, BPDiasGlide, HRGlide, RRGlide, BTGlide, PainGlide;
 Glide BPSysGlide2, BPDiasGlide2, HRGlide2, RRGlide2, BTGlide2, PainGlide2;
 Glide BPSysGlide3, BPDiasGlide3, HRGlide3, RRGlide3, BTGlide3, PainGlide3;
-PriorityQueue<Notification> notificationPriorityQueue;
 public static Comparator<Notification> idComparator;
 ArrayList<Notification> notifications;
 
@@ -29,16 +28,15 @@ void setup() {
   ac = new AudioContext(); //AudioContext ac; is declared in helper_functions
   cp5 = new ControlP5(this);
   
+
   idComparator = new Comparator<Notification>(){
-    @Override
-    public int compare(Notification c1, Notification c2) {
-      if(  c1.getPriorityLevel()>c2.getPriorityLevel()) {  return -1;  }
-      else if (  c1.getPriorityLevel()<c2.getPriorityLevel()){  return 1; }
-            else{  return 0;}  
-    }
-  };
-  notificationPriorityQueue = new PriorityQueue<Notification>(20,idComparator);
-  
+      @Override
+      public int compare(Notification c1, Notification c2) {
+        if(  c1.getPriorityLevel()>c2.getPriorityLevel()) {  return -1;  }
+        else if (  c1.getPriorityLevel()<c2.getPriorityLevel()){  return 1; }
+              else{  return 0;}  
+      }
+    };
   
   
   

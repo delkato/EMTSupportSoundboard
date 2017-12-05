@@ -125,6 +125,102 @@ class Patient {
       }
   }
   
+  public State getBPSState() { 
+    if (BPSys > 140) {
+      if(BPSys > 180) {
+        return State.Critical; //hypertensive crisis
+      }
+      else{
+        return State.Moderate;
+      }
+    }
+    else{
+      return State.Normal;
+    } 
+  }
+  public State getBPDState() { 
+     if (BPDias > 90) { 
+          if(BPDias > 120) {
+            return State.Critical; //hypertensive crisis
+          }
+          else{
+            return State.Moderate; //stage 2 hypertension
+              }
+      }
+      else{
+        return State.Normal;
+      } 
+  }
+  public State getHRState() { 
+    if (HRate > 140) { 
+          if(HRate > 180) {
+            return State.Critical; //hypertensive crisis
+          }
+          else{
+            return State.Moderate; //stage 2 hypertension
+              }
+      }
+      else if(HRate < 40){
+        if(HRate < 20) {
+            return State.Critical; //hypertensive crisis
+          }
+        return State.Moderate;
+      } 
+      else{
+        return State.Normal;
+      } 
+  }
+  public State getRRState() {
+    if (RRate > 40) { 
+          if(RRate > 60) {
+            return State.Critical; //hypertensive crisis
+          }
+          else{
+            return State.Moderate; //stage 2 hypertension
+              }
+      }
+      else if(RRate < 8){
+        if(RRate < 4) {
+            return State.Critical; //hypertensive crisis
+          }
+        return State.Moderate;
+      } 
+      else{
+        return State.Normal;
+      } 
+  }
+  public State getBTState() { 
+  if (BTemp > 100) { 
+          if(BTemp > 104) {
+            return State.Critical; //hypertensive crisis
+          }
+          else{
+            return State.Moderate; //stage 2 hypertension
+              }
+      }
+      else if(BTemp < 95.5){
+            return State.Critical; //hypertensive crisis
+      } 
+      else{
+        return State.Normal;
+      } 
+  }
+  public State getPLState() { 
+      if (PLevel > 3){
+        if(PLevel > 6){
+          return State.Critical;
+        }
+        return State.Moderate;
+      }
+      else{
+       return State.Normal;
+      }
+  }
+  
+  
+  
+  
+  
   
   class VitalTask extends TimerTask {
     VitalType vitalT;
