@@ -14,15 +14,16 @@ class Sensor {
   }
   
   public void updatePatientStates() {
-    BPSState = patient.getBPSState();
-    BPDState = patient.getBPDState();
-    HRState = patient.getHRState();
-    RRState = patient.getRRState();
-    BTState = patient.getBTState();
-    PLState = patient.getPLState();
+    if(detected[patient.getPatientID()-1]){
+      BPSState = patient.getBPSState();
+      BPDState = patient.getBPDState();
+      HRState = patient.getHRState();
+      RRState = patient.getRRState();
+      BTState = patient.getBTState();
+      PLState = patient.getPLState();
     //timer.schedule(new UpdatePatientStates(), 5000);
       notificationManager();
-    
+    }
   }
   
   public void notificationManager() {

@@ -11,7 +11,7 @@ BiquadFilter biFilter;
 
 //declare global variables at the top of your sketch
 //AudioContext ac; is declared in helper_functions
-SamplePlayer bp1, btcold, bthot, hr1,hr2, pain1, rr1, feedback;
+SamplePlayer bp1, btcold, bthot, hr1,hr2, pain1, rr1, feedback, START, ping;
 ControlP5 cp5;
 Patient patient1,patient2,patient3;
 Gain g;// master gain
@@ -19,7 +19,7 @@ Glide glide;
 //Glide BPSysGlide, BPDiasGlide, HRGlide, RRGlide, BTGlide, PainGlide;
 //Glide BPSysGlide2, BPDiasGlide2, HRGlide2, RRGlide2, BTGlide2, PainGlide2;
 //Glide BPSysGlide3, BPDiasGlide3, HRGlide3, RRGlide3, BTGlide3, PainGlide3;
-
+boolean[] detected;
 int BPSysValue, BPDiasValue, HRValue, RRValue,  PainValue;
 int BPSysValue2, BPDiasValue2, HRValue2, RRValue2,  PainValue2;
 int BPSysValue3, BPDiasValue3, HRValue3, RRValue3,  PainValue3;
@@ -27,7 +27,7 @@ float BTValue, BTValue2,BTValue3;
 CheckBox patientCheckBox,vitalCheckBox;
 public static Comparator<Notification> idComparator;
 NotificationHandler Handler;
-CheckBox patientBox, vitalBox;
+CheckBox patientBox, vitalBox, detectedBox1,detectedBox2,detectedBox3 ;
 Sensor sensor1,sensor2,sensor3;
 //end global variables
 
@@ -41,8 +41,12 @@ void setup() {
   biFilter = new BiquadFilter(ac,BiquadFilter.Type.LP,20000.0,0.8);
   ac.out.addInput(g);
  
-
-  
+  detected = new boolean[3];
+  detected[0] = false;
+  detected[1] =false;
+  detected[2] = false;
+  ping = getSamplePlayer("dun1.mp3");
+  START = getSamplePlayer("start.wav");
   bp1 = getSamplePlayer("feedback.wav");
   btcold = getSamplePlayer("temp.wav");
   bthot = getSamplePlayer("temp.wav");
@@ -100,7 +104,11 @@ void setup() {
     .addItem("Patient 1", 10)
     .addItem("Patient 2", 20)
     .addItem("Patient 3", 30);
-    
+     
+  cp5.addButton("listPatients")
+   .setPosition(100,520)
+   .setSize(100,30)
+   .setLabel("List Patients");
    
   cp5.addButton("vitalFocus")
    .setPosition(100,220)
@@ -166,7 +174,7 @@ void setup() {
       .setFont(createFont("Georgia",20))
       ;
   //Detected checkbox
-  cp5.addCheckBox("detectedCheckBox1")
+  detectedBox1 = cp5.addCheckBox("detectedCheckBox1")
     .setPosition(900, 70)
     .setColorForeground(color(120))
     .setColorActive(color(255))
@@ -229,18 +237,18 @@ void setup() {
     .setValue(0)
     .setLabel("Pain")
     ;
-   cp5.addCheckBox("Afflictions1")
-    .setPosition(950, 150)
-    .setColorForeground(color(120))
-    .setColorActive(color(255))
-    .setColorLabel(color(255))
-    .setSize(10, 10)
-    .setItemsPerRow(3)
-    .setSpacingColumn(80)
-    .setSpacingRow(20)
-    .addItem("HR Irregular 1", 0)
-    .addItem("Unconscious 1", 0)
-    .addItem("Breathing Obstructed 1", 0);
+   //cp5.addCheckBox("Afflictions1")
+   // .setPosition(950, 150)
+   // .setColorForeground(color(120))
+   // .setColorActive(color(255))
+   // .setColorLabel(color(255))
+   // .setSize(10, 10)
+   // .setItemsPerRow(3)
+   // .setSpacingColumn(80)
+   // .setSpacingRow(20)
+   // .addItem("HR Irregular 1", 0)
+   // .addItem("Unconscious 1", 0)
+   // .addItem("Breathing Obstructed 1", 0);
     
     
     
@@ -252,7 +260,7 @@ void setup() {
       .setFont(createFont("Georgia",20))
       ;
   //Detected checkbox
-  cp5.addCheckBox("detectedCheckBox2")
+  detectedBox2= cp5.addCheckBox("detectedCheckBox2")
     .setPosition(900, 320)
     .setColorForeground(color(120))
     .setColorActive(color(255))
@@ -315,18 +323,18 @@ void setup() {
     .setValue(0)
     .setLabel("Pain")
     ;
-   cp5.addCheckBox("Afflictions2")
-    .setPosition(950, 400)
-    .setColorForeground(color(120))
-    .setColorActive(color(255))
-    .setColorLabel(color(255))
-    .setSize(10, 10)
-    .setItemsPerRow(3)
-    .setSpacingColumn(80)
-    .setSpacingRow(20)
-    .addItem("HR Irregular 2", 0)
-    .addItem("Unconscious 2", 0)
-    .addItem("Breathing Obstructed 2", 0);
+   //cp5.addCheckBox("Afflictions2")
+   // .setPosition(950, 400)
+   // .setColorForeground(color(120))
+   // .setColorActive(color(255))
+   // .setColorLabel(color(255))
+   // .setSize(10, 10)
+   // .setItemsPerRow(3)
+   // .setSpacingColumn(80)
+   // .setSpacingRow(20)
+   // .addItem("HR Irregular 2", 0)
+   // .addItem("Unconscious 2", 0)
+   // .addItem("Breathing Obstructed 2", 0);
     
     
     //PATIENT 3
@@ -337,7 +345,7 @@ void setup() {
       .setFont(createFont("Georgia",20))
       ;
   //Detected checkbox
-  cp5.addCheckBox("detectedCheckBox3")
+  detectedBox3=cp5.addCheckBox("detectedCheckBox3")
     .setPosition(900, 570)
     .setColorForeground(color(120))
     .setColorActive(color(255))
@@ -400,18 +408,18 @@ void setup() {
     .setValue(0)
     .setLabel("Pain")
     ;
-  cp5.addCheckBox("Afflictions3")
-    .setPosition(950, 650)
-    .setColorForeground(color(120))
-    .setColorActive(color(255))
-    .setColorLabel(color(255))
-    .setSize(10, 10)
-    .setItemsPerRow(3)
-    .setSpacingColumn(80)
-    .setSpacingRow(20)
-    .addItem("HR Irregular 3", 0)
-    .addItem("Unconscious 3", 0)
-    .addItem("Breathing Obstructed 3", 0);
+  //cp5.addCheckBox("Afflictions3")
+  //  .setPosition(950, 650)
+  //  .setColorForeground(color(120))
+  //  .setColorActive(color(255))
+  //  .setColorLabel(color(255))
+  //  .setSize(10, 10)
+  //  .setItemsPerRow(3)
+  //  .setSpacingColumn(80)
+  //  .setSpacingRow(20)
+  //  .addItem("HR Irregular 3", 0)
+  //  .addItem("Unconscious 3", 0)
+  //  .addItem("Breathing Obstructed 3", 0);
 
   //ac.out.addInput();
   
@@ -424,7 +432,7 @@ void setup() {
   patient1.setSensor(sensor1);
   patient2.setSensor(sensor2);
   patient3.setSensor(sensor3);
-  
+  ping.pause(true);
   bp1.pause(true);
   btcold.pause(true);
   bthot.pause(true);
@@ -433,7 +441,8 @@ void setup() {
   pain1.pause(true);
   rr1.pause(true);
   feedback.pause(true);
-  
+  biFilter.addInput(ping);
+  biFilter.addInput(START);
   biFilter.addInput(bp1);
   biFilter.addInput(btcold);
   biFilter.addInput(bthot);
@@ -450,6 +459,46 @@ void setup() {
 void draw() {
   background(0);  //fills the canvas with black (0) each frame
 }
+
+
+public void detectedCheckBox1(){
+  println("checkbox");
+  if(detectedBox1.getArrayValue()[0] == 1) {
+    if(!detected[0]){
+      ping.setToLoopStart();
+        ping.start(); 
+        detected[0] = true;
+    }
+  }
+  else{
+    detected[0] =false;
+  }
+}
+public void detectedCheckBox2(){
+  if(detectedBox2.getArrayValue()[0] == 1) {
+    if(!detected[1]){
+      ping.setToLoopStart();
+        ping.start();  
+        detected[1] = true;
+    }
+  }
+  else{
+    detected[1] =false;
+  }
+}
+public void detectedCheckBox3(){
+  if(detectedBox3.getArrayValue()[0] == 1) {
+    if(!detected[2]){
+        ping.setToLoopStart();
+        ping.start();  
+        detected[2] = true;
+    }
+  }
+  else{
+    detected[2] =false;
+  }
+}
+
 
 public void BPSysSlider1(int newGain) {
   BPSysValue=(int) newGain;
@@ -527,9 +576,19 @@ public void HealthButton1() {
   patient1.setRespiratoryRate((int)RRValue);
   patient1.setBodyTemperature(BTValue);
   patient1.setPainLevel((int)PainValue);
-  println("changed patient " + patient1.getPatientID());
 
+    if(detectedBox1.getArrayValue()[0] == 1) {
+    if(!detected[0]){
+      ping.setToLoopStart();
+        ping.start(); 
+        detected[0] = true;
+    }
+  }
+  else{
+    detected[0] =false;
+  }
 }
+
 public void HealthButton2() {
   patient2.setSystolicBloodPressure((int)BPSysValue2);
   patient2.setDiastolicBloodPressure((int)BPDiasValue2);
@@ -537,8 +596,19 @@ public void HealthButton2() {
   patient2.setRespiratoryRate((int)RRValue2);
   patient2.setBodyTemperature(BTValue2);
   patient2.setPainLevel((int)PainValue2);
-  println(" patient " + patient2.getPatientID());
+
+  if(detectedBox2.getArrayValue()[0] == 1) {
+    if(!detected[1]){
+      ping.setToLoopStart();
+        ping.start();  
+        detected[1] = true;
+    }
+  }
+  else{
+    detected[1] =false;
+  }
 }
+
 public void HealthButton3() {
   patient3.setSystolicBloodPressure((int)BPSysValue3);
   patient3.setDiastolicBloodPressure((int)BPDiasValue3);
@@ -546,7 +616,17 @@ public void HealthButton3() {
   patient3.setRespiratoryRate((int)RRValue3);
   patient3.setBodyTemperature(BTValue3);
   patient3.setPainLevel((int)PainValue3);
-  println("changed patient " + patient3.getPatientID());
+  
+  if(detectedBox3.getArrayValue()[0] == 1) {
+    if(!detected[2]){
+        ping.setToLoopStart();
+        ping.start();  
+        detected[2] = true;
+    }
+  }
+  else{
+    detected[2] =false;
+  }
 }
 
 public void addPatient() {
@@ -610,7 +690,11 @@ public void removeVitalFocus() {
     }
   }
 }
-
+public void listPatients(){
+  String out = "Patients " + Handler.patientsFound();
+  Notification notifi = new Notification(NotificationType.SystemResponse,  00, 5,out);
+  Handler.notificationReceived(notifi);
+}
 
 public void vitalCheckBox() {
 }
