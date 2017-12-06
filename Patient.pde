@@ -30,6 +30,7 @@ class Patient {
   public int getPatientID() { return patientID; }
   public Sensor getSensor() { return sensor; }
   
+  
   public void setSystolicBloodPressure(int BPSys) { this.BPSys = BPSys; }
   public void setDiastolicBloodPressure(int BPDias) { this.BPDias = BPDias; }
   public void setHeartRate(int HRate) { this.HRate = HRate; }

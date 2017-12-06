@@ -34,14 +34,7 @@ void setup() {
   cp5 = new ControlP5(this);
   Handler = new NotificationHandler();
 
-  idComparator = new Comparator<Notification>(){
-      @Override
-      public int compare(Notification c1, Notification c2) {
-        if(  c1.getPriorityLevel()>c2.getPriorityLevel()) {  return -1;  }
-        else if (  c1.getPriorityLevel()<c2.getPriorityLevel()){  return 1; }
-              else{  return 0;}  
-      }
-    };
+
   
   bp1 = getSamplePlayer("bp1.wav");
   btcold = getSamplePlayer("btcold.wav");
@@ -203,7 +196,7 @@ void setup() {
   cp5.addSlider("RRSlider1")
     .setPosition(1120,10)
     .setSize(15,100)
-    .setRange(0,30)
+    .setRange(0,70)
     .setValue(12)
     .setLabel("RR")
     ;
@@ -289,7 +282,7 @@ void setup() {
   cp5.addSlider("RRSlider2")
     .setPosition(1120,260)
     .setSize(15,100)
-    .setRange(0,30)
+    .setRange(0,70)
     .setValue(12)
     .setLabel("RR")
     ;
@@ -374,7 +367,7 @@ void setup() {
   cp5.addSlider("RRSlider3")
     .setPosition(1120,510)
     .setSize(15,100)
-    .setRange(0,30)
+    .setRange(0,70)
     .setValue(12)
     .setLabel("RR")
     ;
@@ -518,7 +511,7 @@ public void HealthButton1() {
   patient1.setRespiratoryRate((int)RRValue);
   patient1.setBodyTemperature(BTValue);
   patient1.setPainLevel((int)PainValue);
-  println("changed patient 1");
+  println("changed patient " + patient1.getPatientID());
 
 }
 public void HealthButton2() {
@@ -528,7 +521,7 @@ public void HealthButton2() {
   patient2.setRespiratoryRate((int)RRValue2);
   patient2.setBodyTemperature(BTValue2);
   patient2.setPainLevel((int)PainValue2);
-  println("changed patient 2");
+  println("changed patient " + patient2.getPatientID());
 }
 public void HealthButton3() {
   patient3.setSystolicBloodPressure((int)BPSysValue3);
@@ -537,20 +530,20 @@ public void HealthButton3() {
   patient3.setRespiratoryRate((int)RRValue3);
   patient3.setBodyTemperature(BTValue3);
   patient3.setPainLevel((int)PainValue3);
-  println("changed patient 3");
+  println("changed patient " + patient3.getPatientID());
 }
 
 public void addPatient() {
   for(int i = 0; i < 3; i++){
     if(patientCheckBox.getArrayValue()[i] == 1) {
-      Handler.addPatient(i);
+      Handler.addPatient(i+1);
     }
   } 
 }
 public void removePatient() {
   for(int i = 0; i < 3; i++){
     if(patientCheckBox.getArrayValue()[i] == 1) {
-      Handler.removePatient(i);
+      Handler.removePatient(i+1);
     }
   } 
 }

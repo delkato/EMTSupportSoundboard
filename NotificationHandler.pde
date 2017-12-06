@@ -23,7 +23,15 @@ class NotificationHandler {
       
       public NotificationHandler() {
        super();
-
+      idComparator = new Comparator<Notification>(){
+        @Override
+        public int compare(Notification c1, Notification c2) {
+          if(  c1.getPriorityLevel()>c2.getPriorityLevel()) {  return -1;  }
+          else if (  c1.getPriorityLevel()<c2.getPriorityLevel()){  return 1; }
+                else{  return 0;}  
+      }
+    };
+  
        notificationPriorityQueue = new PriorityQueue<Notification>(20,idComparator);
        ttsMaker = new TextToSpeechMaker();
        
@@ -38,17 +46,18 @@ class NotificationHandler {
     public void notificationHandle(){
           if(!busy && !timed){
             busy = true;
+             println("notification grab");
             Notification current = notificationPriorityQueue.poll();
             if(current!=null){
+              println(current.getPatientID() + " and " + patientList.keySet());
               //check for whether to play the notification due to focuses
               if(current.getType() == NotificationType.SystemResponse) {
                 
               }
-              else if(patientList.get(current.getPatientID())!=null) {
-                println("check for focus");
+              else if(patientList.containsKey(current.getPatientID())) {
+                  println("check for focus");
                   if((vitals.get(current.getVitalType())!=null)|| vitals.isEmpty()){
                         timed = true;
-                        
                         double x = play(current);
                         timer = new Timer();
                         timer.schedule(new HandlerTask(), (long)x);   //x is the time to wait, given from play()
@@ -67,16 +76,21 @@ class NotificationHandler {
                         timer.schedule(new HandlerTask(), (long)x);   //x is the time to wait, given from play()
                         current = null;
                   }
-              };
-              
-              timed = true;
+                  else{
+                  current = null;
+                  busy = false;
+                  }
+              }
+              else{
+                  current = null;
+                  busy = false;
+              }
             }
             else{
               busy=false;
             }
           }
-    
-        
+
       }
       
       

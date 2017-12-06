@@ -2,15 +2,14 @@
 class Sensor {
   Timer timer;
   Patient patient;
-  NotificationHandler nh;
   State BPSState, BPDState, HRState, RRState, BTState, PLState;
   boolean busy =false;
   public Sensor(Patient patient) {
     this.patient = patient;
-    nh = new NotificationHandler();
+    //nh = new NotificationHandler();
     timer = new Timer();
     // timer set to update states every 10 seconds
-    timer.scheduleAtFixedRate(new UpdatePatientStates(), 5000,3000);
+    timer.scheduleAtFixedRate(new UpdatePatientStates(), 3000,5000);
     
   }
   
@@ -73,8 +72,8 @@ class Sensor {
   }
   
   public void createNotifications(VitalType vital, int priority) {
-    Notification notif = new Notification(NotificationType.StatusUpdate, patient, patient.getPatientID(), priority, false, "", vital, patient.getPainLevel());
-    nh.notificationReceived(notif);
+    Notification notif = new Notification(NotificationType.Alert, patient, patient.getPatientID(), priority, false, "", vital, patient.getPainLevel());
+    Handler.notificationReceived(notif);
   }
   
   class UpdatePatientStates extends TimerTask {
