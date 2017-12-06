@@ -16,9 +16,7 @@ ControlP5 cp5;
 Patient patient1,patient2,patient3;
 Gain g, g2;// master gain
 Glide glide;
-//Glide BPSysGlide, BPDiasGlide, HRGlide, RRGlide, BTGlide, PainGlide;
-//Glide BPSysGlide2, BPDiasGlide2, HRGlide2, RRGlide2, BTGlide2, PainGlide2;
-//Glide BPSysGlide3, BPDiasGlide3, HRGlide3, RRGlide3, BTGlide3, PainGlide3;
+
 boolean[] detected;
 int BPSysValue, BPDiasValue, HRValue, RRValue,  PainValue;
 int BPSysValue2, BPDiasValue2, HRValue2, RRValue2,  PainValue2;
@@ -57,27 +55,7 @@ void setup() {
   rr1 = getSamplePlayer("rr1.wav");
   feedback = getSamplePlayer("feedback.wav");
   confirm = getSamplePlayer("verify.wav");
-  
-  
-  //BPSysGlide = new Glide(ac, 0.0, 50);
-  //BPDiasGlide = new Glide(ac, 0.0, 50);
-  //HRGlide = new Glide(ac, 0.0, 50);
-  //RRGlide = new Glide(ac, 0.0, 50);
-  //BTGlide = new Glide(ac, 0.0, 50);
-  //PainGlide = new Glide(ac, 0.0, 50);
-  //BPSysGlide2 = new Glide(ac, 0.0, 50);
-  //BPDiasGlide2 = new Glide(ac, 0.0, 50);
-  //HRGlide2 = new Glide(ac, 0.0, 50);
-  //RRGlide2 = new Glide(ac, 0.0, 50);
-  //BTGlide2 = new Glide(ac, 0.0, 50);
-  //PainGlide2 = new Glide(ac, 0.0, 50);
-  //BPSysGlide3 = new Glide(ac, 0.0, 50);
-  //BPDiasGlide3 = new Glide(ac, 0.0, 50);
-  //HRGlide3 = new Glide(ac, 0.0, 50);
-  //RRGlide3 = new Glide(ac, 0.0, 50);
-  //BTGlide3 = new Glide(ac, 0.0, 50);
-  //PainGlide3 = new Glide(ac, 0.0, 50);
-  
+
   //User Input Side
   cp5.addButton("addPatient")
    .setPosition(100,60)
@@ -325,19 +303,6 @@ void setup() {
     .setValue(0)
     .setLabel("Pain")
     ;
-   //cp5.addCheckBox("Afflictions2")
-   // .setPosition(950, 400)
-   // .setColorForeground(color(120))
-   // .setColorActive(color(255))
-   // .setColorLabel(color(255))
-   // .setSize(10, 10)
-   // .setItemsPerRow(3)
-   // .setSpacingColumn(80)
-   // .setSpacingRow(20)
-   // .addItem("HR Irregular 2", 0)
-   // .addItem("Unconscious 2", 0)
-   // .addItem("Breathing Obstructed 2", 0);
-    
     
     //PATIENT 3
   cp5.addTextlabel("label3")
@@ -410,21 +375,8 @@ void setup() {
     .setValue(0)
     .setLabel("Pain")
     ;
-  //cp5.addCheckBox("Afflictions3")
-  //  .setPosition(950, 650)
-  //  .setColorForeground(color(120))
-  //  .setColorActive(color(255))
-  //  .setColorLabel(color(255))
-  //  .setSize(10, 10)
-  //  .setItemsPerRow(3)
-  //  .setSpacingColumn(80)
-  //  .setSpacingRow(20)
-  //  .addItem("HR Irregular 3", 0)
-  //  .addItem("Unconscious 3", 0)
-  //  .addItem("Breathing Obstructed 3", 0);
 
-  //ac.out.addInput();
-  
+
   patient1 = new Patient(1, (int)BPSysValue, (int)BPDiasValue,(int)HRValue, (int)RRValue, BTValue, (int)PainValue,0);
   patient2 = new Patient(2, (int)BPSysValue2, (int)BPDiasValue2,(int)HRValue2, (int)RRValue2, BTValue2, (int)PainValue2,1);
   patient3 = new Patient(3, (int)BPSysValue3, (int)BPDiasValue,(int)HRValue, (int)RRValue3, BTValue3, (int)PainValue3,2);
@@ -751,13 +703,9 @@ public void vitalCheckBox() {
 }
 public void addNotes() {
   Handler.ttsPlayback("Report Created");
-  //Notification notifi = new Notification(NotificationType.SystemResponse,  00, 5,"Report Created");
-  //Handler.notificationReceived(notifi);
 }
 public void sendNotes() {
   Handler.ttsPlayback("Report Sent");
-  //Notification notifi = new Notification(NotificationType.SystemResponse,  00, 5,"Report Sent");
-  //Handler.notificationReceived(notifi);
 }
 public void summary() {
   Notification notifi1 = new Notification(NotificationType.StatusUpdate,  patient1, patient1.getPatientID(), 1, false, "", VitalType.RR, patient1.getPainLevel());

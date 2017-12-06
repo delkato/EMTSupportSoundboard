@@ -21,7 +21,6 @@ class Sensor {
       RRState = patient.getRRState();
       BTState = patient.getBTState();
       PLState = patient.getPLState();
-    //timer.schedule(new UpdatePatientStates(), 5000);
       notificationManager();
     }
   }

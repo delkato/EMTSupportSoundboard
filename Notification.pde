@@ -46,11 +46,3 @@ class Notification {
   public Patient getPatient() { return patient; }
   public VitalType getVitalType() { return vital; }
 }
-
-  
-  //public String toString() {
-  //    String output = getType().toString() + ": ";
-  //    output += "(" + getSender() + ")";
-  //    output += " " + getMessage();
-  //    return output;
-  //  }
