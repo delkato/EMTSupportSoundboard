@@ -31,6 +31,13 @@ class Notification {
     this.intensity = intensity;
     println("created notification for patient "+ patientID  + " of priority " + priority + " of Type " + vital.name() );
   }
+   public Notification(NotificationType type, int patientID, int priority, String message) {
+    this.type = type;
+    this.patientID = patientID;
+    this.priority = priority;
+    this.message = message;
+    println("created notification for patient "+ patientID  + " of priority " + priority);
+  }
   public NotificationType getType() { return type; }
   public String getMessage() { return message; }
   public int getPriorityLevel() { return priority; }
