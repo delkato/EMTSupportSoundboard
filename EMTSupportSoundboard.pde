@@ -11,10 +11,10 @@ BiquadFilter biFilter;
 
 //declare global variables at the top of your sketch
 //AudioContext ac; is declared in helper_functions
-SamplePlayer bp1, btcold, bthot, hr1,hr2, pain1, rr1, feedback, START, ping;
+SamplePlayer bp1, btcold, bthot, hr1,hr2, pain1, rr1, feedback, START, ping, confirm;
 ControlP5 cp5;
 Patient patient1,patient2,patient3;
-Gain g;// master gain
+Gain g, g2;// master gain
 Glide glide;
 //Glide BPSysGlide, BPDiasGlide, HRGlide, RRGlide, BTGlide, PainGlide;
 //Glide BPSysGlide2, BPDiasGlide2, HRGlide2, RRGlide2, BTGlide2, PainGlide2;
@@ -37,9 +37,10 @@ void setup() {
   ac = new AudioContext(); //AudioContext ac; is declared in helper_functions
   cp5 = new ControlP5(this);
   Handler = new NotificationHandler();
-   Gain g = new Gain(ac, 2, 0.3);
+    g = new Gain(ac, 2, 0.5);
+    g2 = new Gain(ac, 1, 0.1);
   biFilter = new BiquadFilter(ac,BiquadFilter.Type.LP,20000.0,0.8);
-  ac.out.addInput(g);
+
  
   detected = new boolean[3];
   detected[0] = false;
@@ -55,6 +56,7 @@ void setup() {
   pain1 = getSamplePlayer("painWave.wav");
   rr1 = getSamplePlayer("rr1.wav");
   feedback = getSamplePlayer("feedback.wav");
+  confirm = getSamplePlayer("verify.wav");
   
   
   //BPSysGlide = new Glide(ac, 0.0, 50);
@@ -432,6 +434,8 @@ void setup() {
   patient1.setSensor(sensor1);
   patient2.setSensor(sensor2);
   patient3.setSensor(sensor3);
+  
+  confirm.pause(true);
   ping.pause(true);
   bp1.pause(true);
   btcold.pause(true);
@@ -441,8 +445,9 @@ void setup() {
   pain1.pause(true);
   rr1.pause(true);
   feedback.pause(true);
-  biFilter.addInput(ping);
-  biFilter.addInput(START);
+  g2.addInput(ping);
+  g2.addInput(START);
+  g2.addInput(confirm);
   biFilter.addInput(bp1);
   biFilter.addInput(btcold);
   biFilter.addInput(bthot);
@@ -453,6 +458,7 @@ void setup() {
   biFilter.addInput(feedback);
   g.addInput(biFilter);
   ac.out.addInput(g);
+  ac.out.addInput(g2);
   ac.start();
 }
 
@@ -630,31 +636,60 @@ public void HealthButton3() {
 }
 
 public void addPatient() {
+  boolean play =false;
   for(int i = 0; i < 3; i++){
     if(patientCheckBox.getArrayValue()[i] == 1) {
       Handler.addPatient(i+1);
+      play = true;
     }
   } 
+  if(play) {
+        confirm.setToLoopStart();
+        Glide pitchValue1;
+        pitchValue1 = new Glide(ac, 1.1, 50);
+        confirm.setPitch(pitchValue1);
+        confirm.start(); 
+  }
 }
 public void removePatient() {
+  boolean play =false;
   for(int i = 0; i < 3; i++){
     if(patientCheckBox.getArrayValue()[i] == 1) {
       Handler.removePatient(i+1);
+      play = true;
     }
   } 
+    if(play) {
+      confirm.setToLoopStart();
+       Glide pitchValue1;
+        pitchValue1 = new Glide(ac, 0.9, 50);
+        confirm.setPitch(pitchValue1);
+        confirm.start();  
+    }
 }
 public void patientFocus() {
+  boolean play =false;
   for(int i = 0; i < 3; i++){
     if(patientCheckBox.getArrayValue()[i] == 1) {
       Handler.addPatient(i+1);
+      play = true;
     }
-  } 
+  }
+  if(play) {
+      confirm.setToLoopStart();
+       Glide pitchValue1;
+        pitchValue1 = new Glide(ac, 1.0, 50);
+        confirm.setPitch(pitchValue1);
+        confirm.start();  
+    }
 }
 public void patientCheckBox() {
 }
 public void vitalFocus() {
+  boolean play =false;
   for(int i = 0; i < 5; i++){
     if(vitalCheckBox.getArrayValue()[i] == 1) {
+      play = true;
       switch(i){
         case 0: Handler.addVital(VitalType.BPD);
                 Handler.addVital(VitalType.BPS);
@@ -670,10 +705,19 @@ public void vitalFocus() {
       }
     }
   }
+  if(play) {
+      confirm.setToLoopStart();
+       Glide pitchValue1;
+        pitchValue1 = new Glide(ac, 1.1, 50);
+        confirm.setPitch(pitchValue1);
+        confirm.start();  
+    }
 }
 public void removeVitalFocus() {
+  boolean play =false;
   for(int i = 0; i < 5; i++){
     if(vitalCheckBox.getArrayValue()[i] == 1) {
+      play= true;
       switch(i){
         case 0: Handler.removeVital(VitalType.BPD);
                 Handler.removeVital(VitalType.BPS);
@@ -689,6 +733,13 @@ public void removeVitalFocus() {
       }
     }
   }
+  if(play) {
+      confirm.setToLoopStart();
+       Glide pitchValue1;
+        pitchValue1 = new Glide(ac, 1.1, 50);
+        confirm.setPitch(pitchValue1);
+        confirm.start();  
+    }
 }
 public void listPatients(){
   String out = "Patients " + Handler.patientsFound();
@@ -699,12 +750,14 @@ public void listPatients(){
 public void vitalCheckBox() {
 }
 public void addNotes() {
-  Notification notifi = new Notification(NotificationType.SystemResponse,  00, 5,"Report Created");
-  Handler.notificationReceived(notifi);
+  Handler.ttsPlayback("Report Created");
+  //Notification notifi = new Notification(NotificationType.SystemResponse,  00, 5,"Report Created");
+  //Handler.notificationReceived(notifi);
 }
 public void sendNotes() {
-  Notification notifi = new Notification(NotificationType.SystemResponse,  00, 5,"Report Sent");
-  Handler.notificationReceived(notifi);
+  Handler.ttsPlayback("Report Sent");
+  //Notification notifi = new Notification(NotificationType.SystemResponse,  00, 5,"Report Sent");
+  //Handler.notificationReceived(notifi);
 }
 public void summary() {
   Notification notifi1 = new Notification(NotificationType.StatusUpdate,  patient1, patient1.getPatientID(), 1, false, "", VitalType.RR, patient1.getPainLevel());
@@ -714,3 +767,4 @@ public void summary() {
   Notification notifi3 = new Notification(NotificationType.StatusUpdate,  patient3, patient3.getPatientID(), 1, false, "", VitalType.RR, patient3.getPainLevel());
   Handler.notificationReceived(notifi3);
 }
+  
