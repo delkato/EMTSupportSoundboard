@@ -32,7 +32,7 @@ class NotificationHandler {
       }
     };
     patientList.put(0,true);
-       notificationPriorityQueue = new PriorityQueue<Notification>(20,idComparator);
+       notificationPriorityQueue = new PriorityQueue<Notification>(100,idComparator);
        ttsMaker = new TextToSpeechMaker();
        
       }
@@ -47,6 +47,7 @@ class NotificationHandler {
           if(!busy && !timed){
             busy = true;
              println("notification grab");
+             println(notificationPriorityQueue.size());
             Notification current = notificationPriorityQueue.poll();
             if(current!=null){
               println(current.getPatientID() + " and " + patientList.keySet());
@@ -83,13 +84,15 @@ class NotificationHandler {
                   }
                   else{
                     current = null;
-                    timed = false;
-                    busy = false;
+                    timer = new Timer();
+                    timer.schedule(new HandlerTask(), 1);
                   }
               }
               else{
+                  timer = new Timer();
+                  timer.schedule(new HandlerTask(), 1);
                   current = null;
-                  busy = false;
+
               }
             }
             else{
