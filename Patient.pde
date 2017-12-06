@@ -38,6 +38,114 @@ class Patient {
   public void setBodyTemperature(float BTemp) { this.BTemp = BTemp; }
   public void setPainLevel(int PLevel) { this.PLevel = PLevel; }
   public void setSensor(Sensor sensor) { this.sensor = sensor; }
+  
+  
+  public float getHRFreq(){
+    State modifier = getHRState();
+      switch (modifier){
+      case Critical:
+        if(HRate>100){
+          return 1.5 + ((float)HRate-180)/40;
+        }
+        else{
+          return 0.7-(20-(float)HRate)/60;
+        }
+      case Moderate:
+        if(HRate>100){
+          return 1.2 + ((float)HRate-140)/40;
+        }
+        else{
+          return 0.8 - (40- (float)HRate)/80;
+        }
+      case Normal:
+        return 1.0;
+    }
+    return 1.0;
+  }
+  
+  public float getRRFreq(){
+    State modifier = getRRState();
+    switch (modifier){
+      case Critical:
+        if(RRate>40){
+          return 2.0 + ((float)RRate-60)/40;
+        }
+        else{
+          return 0.2;
+        }
+      case Moderate:
+        if(RRate>40){
+          return 1.5 + ((float)RRate-40)/40;
+        }
+        else{
+          return 0.5;
+        }
+      case Normal:
+        return 1.0;
+    }
+    return 1.0;
+  }
+  public float getBTFreq(){
+      State modifier = getBTState();
+      switch (modifier){
+        case Critical:
+          if(BTemp>100){
+            return 2.0 + ((float)BTemp-100)/10;
+          }
+          else{
+            return 0.4;
+          }
+        case Moderate:
+          if(BTemp>100){
+            return 1.5 + ((float)BTemp-100)/10;
+          }
+          else{
+            return 0.6;
+          }
+        case Normal:
+          return 1.0;
+      }
+      return 1.0;
+  }
+  
+  public float getPLFreq(){
+      State modifier = getPLState();
+      switch (modifier){
+      case Critical:
+          return 2.0;
+      case Moderate:
+          return 1.6;
+      case Normal:
+        return 1.0;
+    }
+    return 1.0;
+  }
+  public float getBPSFreq() {
+      State modifier = getBPSState();
+      switch (modifier){
+      case Critical:
+          return 2.0;
+      case Moderate:
+          return 1.6;
+      case Normal:
+        return 1.0;
+    }
+    return 1.0;
+  }
+  public float getBPDFreq() {
+  State modifier = getBPDState();
+      switch (modifier){
+      case Critical:
+          return 2.0;
+      case Moderate:
+          return 1.6;
+      case Normal:
+        return 1.0;
+    }
+    return 1.0;
+  }
+  
+  
   //immediate update of values
   public void updateVital(VitalType vital, float input) {
     switch (vital){
