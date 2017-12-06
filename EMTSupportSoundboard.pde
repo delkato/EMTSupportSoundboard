@@ -7,13 +7,15 @@ import java.util.Comparator;
 import java.util.PriorityQueue;
 import java.util.Timer;
 import java.util.TimerTask;
-
+BiquadFilter biFilter;
 
 //declare global variables at the top of your sketch
 //AudioContext ac; is declared in helper_functions
 SamplePlayer bp1, btcold, bthot, hr1, pain1, rr1, feedback;
 ControlP5 cp5;
 Patient patient1,patient2,patient3;
+Gain g;// master gain
+Glide glide;
 //Glide BPSysGlide, BPDiasGlide, HRGlide, RRGlide, BTGlide, PainGlide;
 //Glide BPSysGlide2, BPDiasGlide2, HRGlide2, RRGlide2, BTGlide2, PainGlide2;
 //Glide BPSysGlide3, BPDiasGlide3, HRGlide3, RRGlide3, BTGlide3, PainGlide3;
@@ -35,16 +37,20 @@ void setup() {
   ac = new AudioContext(); //AudioContext ac; is declared in helper_functions
   cp5 = new ControlP5(this);
   Handler = new NotificationHandler();
-
+   Gain g = new Gain(ac, 2, 0.3);
+  biFilter = new BiquadFilter(ac,BiquadFilter.Type.LP,20000.0,0.8);
+  ac.out.addInput(g);
+ 
 
   
-  bp1 = getSamplePlayer("bp1.wav");
-  btcold = getSamplePlayer("btcold.wav");
-  bthot = getSamplePlayer("bthot.wav");
+  bp1 = getSamplePlayer("feedback.wav");
+  btcold = getSamplePlayer("temp.wav");
+  bthot = getSamplePlayer("temp.wav");
   hr1 = getSamplePlayer("hr1.wav");
-  pain1 = getSamplePlayer("pain1.wav");
+  pain1 = getSamplePlayer("painWave.wav");
   rr1 = getSamplePlayer("rr1.wav");
   feedback = getSamplePlayer("feedback.wav");
+  
   
   //BPSysGlide = new Glide(ac, 0.0, 50);
   //BPDiasGlide = new Glide(ac, 0.0, 50);
@@ -426,14 +432,15 @@ void setup() {
   rr1.pause(true);
   feedback.pause(true);
   
-  ac.out.addInput(bp1);
-  ac.out.addInput(btcold);
-  ac.out.addInput(bthot);
-  ac.out.addInput(hr1);
-  ac.out.addInput(pain1);
-  ac.out.addInput(rr1);
-  ac.out.addInput(feedback);
-  
+  biFilter.addInput(bp1);
+  biFilter.addInput(btcold);
+  biFilter.addInput(bthot);
+  biFilter.addInput(hr1);
+  biFilter.addInput(pain1);
+  biFilter.addInput(rr1);
+  biFilter.addInput(feedback);
+  g.addInput(biFilter);
+  ac.out.addInput(g);
   ac.start();
 }
 

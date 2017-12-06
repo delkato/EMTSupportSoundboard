@@ -118,53 +118,87 @@ class NotificationHandler {
             if(notif.getType()== NotificationType.StatusUpdate){ //play update sounds based on current patient health
               Timer queue = new Timer();
               double amount = 0;
+              switch(notif.getPatient().getHRState()){
+                case Critical:queue.schedule( new HRSound(State.Critical), (long)amount);
+                   amount += hr1.getSample().getLength();
+                   break;
+                case Moderate:queue.schedule( new HRSound(State.Moderate), (long)amount);
+                   amount += hr1.getSample().getLength();
+                   break;
+                case Normal:
+                   queue.schedule( new HRSound(State.Normal), (long)amount);
+                   amount += hr1.getSample().getLength();
+                   break;
+              }
+              switch(notif.getPatient().getRRState()){
+                case Critical:queue.schedule( new RRSound(State.Critical), (long)amount);
+                   amount += rr1.getSample().getLength();
+                   break;
+                case Moderate:queue.schedule( new RRSound(State.Moderate), (long)amount);
+                   amount += rr1.getSample().getLength();
+                   break;
+                case Normal:
+                   queue.schedule( new RRSound(State.Normal), (long)amount);
+                   amount += rr1.getSample().getLength();
+                   break;
+              }
               switch(notif.getPatient().getBPSState()){
                 case Critical:
+                  queue.schedule( new BPDSound(State.Critical), (long)amount);
+                   amount += bp1.getSample().getLength();
+                   break;
                 case Moderate:
+                  queue.schedule( new BPDSound(State.Moderate), (long)amount);
+                   amount += bp1.getSample().getLength();
+                   break;
                 case Normal:
-                   bp1.setToLoopStart();
-                   bp1.start();
-                   amount =  bp1.getSample().getLength();
+                  queue.schedule( new BPDSound(State.Normal), (long)amount);
+                   amount += bp1.getSample().getLength();
+                   break;
               }
               switch(notif.getPatient().getBPDState()){
                 case Critical:
-                case Moderate:
-                case Normal:
-                   queue.schedule( new BPDSound(), (long)amount);
+                  queue.schedule( new BPDSound(State.Critical), (long)amount);
                    amount += bp1.getSample().getLength();
-              }
-              switch(notif.getPatient().getHRState()){
-                case Critical:
+                   break;
                 case Moderate:
+                  queue.schedule( new BPDSound(State.Moderate), (long)amount);
+                   amount += bp1.getSample().getLength();
+                   break;
                 case Normal:
-                   queue.schedule( new HRSound(), (long)amount);
-                   amount += hr1.getSample().getLength();
+                   queue.schedule( new BPDSound(State.Normal), (long)amount);
+                   amount += bp1.getSample().getLength();
+                   break;
               }
-              switch(notif.getPatient().getRRState()){
-                case Critical:
-                case Moderate:
-                case Normal:
-                   queue.schedule( new RRSound(), (long)amount);
-                   amount += rr1.getSample().getLength();
-              }
+
               switch(notif.getPatient().getBTState()){
                 case Critical:
                     if (notif.getPatient().getBodyTemperature() < 95.5) {
-                       queue.schedule( new ColdSound(), (long)amount);
+                       queue.schedule( new ColdSound(State.Normal), (long)amount);
                        amount += btcold.getSample().getLength();
                      } else if (notif.getPatient().getBodyTemperature() > 100) {
-                       queue.schedule( new HotSound(), (long)amount);
+                       queue.schedule( new HotSound(State.Normal), (long)amount);
                        amount += bthot.getSample().getLength();
                      }
                 case Moderate:
                 case Normal:
-              }
+                       queue.schedule( new HotSound(State.Normal), (long)amount);
+                       amount += bthot.getSample().getLength();
+                     }
+              
               switch(notif.getPatient().getPLState()){
                 case Critical:
-                case Moderate:
-                case Normal:
-                     queue.schedule( new PLSound(), (long)amount);
+                queue.schedule( new PLSound(State.Critical), (long)amount);
                        amount += pain1.getSample().getLength();
+                       break;
+                case Moderate:
+                  queue.schedule( new PLSound(State.Moderate), (long)amount);
+                       amount += pain1.getSample().getLength();
+                       break;
+                case Normal:
+                     queue.schedule( new PLSound(State.Normal), (long)amount);
+                       amount += pain1.getSample().getLength();
+                       break;
               }
               return amount;
             }
@@ -210,8 +244,9 @@ class NotificationHandler {
                      bthot.start();
                      return bthot.getSample().getLength();
                    } else {
-                     ttsPlayback("Normal temp");
-                     return textToSpeech.getSample().getLength();
+                      btcold.setToLoopStart();
+                     btcold.start();
+                     return btcold.getSample().getLength();
                    }
                  }
                case PL:
@@ -224,7 +259,7 @@ class NotificationHandler {
            }
             
           
-          return 0;
+          return 1;
         }
         
         public void addPatient(int input) {
@@ -264,43 +299,109 @@ class NotificationHandler {
   }
   
   class BPDSound extends TimerTask {
-    public BPDSound() { }
+    State state1;
+    public BPDSound(State state) {state1 = state; }
     public void run() {
+      Glide pitchValue1;
+      switch(state1){
+        case Critical: 
+          pitchValue1 = new Glide(ac, 1.9, 50);
+          bp1.setPitch(pitchValue1);
+          break;
+        case Moderate:  
+          pitchValue1 = new Glide(ac, 1.5, 50);
+          bp1.setPitch(pitchValue1);
+          break;
+        case Normal:  
+          pitchValue1 = new Glide(ac, 1.0, 50);
+          bp1.setPitch(pitchValue1);
+          break;
+      }
         bp1.setToLoopStart();
         bp1.start();
     }
   }
   class HRSound extends TimerTask {
-    public HRSound() { }
+    State state1;
+    public HRSound(State state) {state1 = state; }
     public void run() {
+       Glide pitchValue1;
+      switch(state1){
+        case Critical: 
+          pitchValue1 = new Glide(ac, 1.9, 50);
+          hr1.setPitch(pitchValue1);
+          break;
+        case Moderate:  
+          pitchValue1 = new Glide(ac, 1.5, 50);
+          hr1.setPitch(pitchValue1);
+          break;
+        case Normal:  
+          pitchValue1 = new Glide(ac, 1.0, 50);
+          hr1.setPitch(pitchValue1);
+          break;
+      }
         hr1.setToLoopStart();
         hr1.start();
     }
   }
   class RRSound extends TimerTask {
-    public RRSound() { }
+    State state1;
+    public RRSound(State state) {state1 = state; }
     public void run() {
+       Glide pitchValue1;
+      switch(state1){
+        case Critical: 
+          pitchValue1 = new Glide(ac, 1.9, 50);
+          rr1.setPitch(pitchValue1);
+          break;
+        case Moderate:  
+          pitchValue1 = new Glide(ac, 1.5, 50);
+          rr1.setPitch(pitchValue1);
+          break;
+        case Normal:  
+          pitchValue1 = new Glide(ac, 1.0, 50);
+          rr1.setPitch(pitchValue1);
+          break;
+      }
         rr1.setToLoopStart();
         rr1.start();
     }
   }
   class HotSound extends TimerTask {
-    public HotSound() { }
+    State state1;
+    public HotSound(State state) {state1 = state; }
     public void run() {
         bthot.setToLoopStart();
         bthot.start();
     }
   }
   class ColdSound extends TimerTask {
-    public ColdSound() { }
+    State state1;
+    public ColdSound(State state) {state1 = state; }
     public void run() {
         btcold.setToLoopStart();
         btcold.start();
     }
   }
   class PLSound extends TimerTask {
-    public PLSound() { }
+    State state1;
+    public PLSound(State state) { state1 = state;}
     public void run() {
+       Glide pitchValue1;
+      switch(state1){
+        case Critical: 
+          pitchValue1 = new Glide(ac, 1.9, 50);
+          pain1.setPitch(pitchValue1);
+          break;
+        case Moderate:  
+          pitchValue1 = new Glide(ac, 1.5, 50);
+          pain1.setPitch(pitchValue1);
+          break;
+        case Normal:  
+          pitchValue1 = new Glide(ac, 1.0, 50);
+          pain1.setPitch(pitchValue1);
+          break;
+      }
         pain1.setToLoopStart();
         pain1.start();
     }
