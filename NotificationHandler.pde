@@ -118,18 +118,25 @@ class NotificationHandler {
             if(notif.getType()== NotificationType.StatusUpdate){ //play update sounds based on current patient health
               Timer queue = new Timer();
               double amount = 0;
+              if(patientList.size()>2){
+                amount += ttsPlayback("Patient " + Integer.toString(notif.getPatientID()));
+              }
                queue.schedule( new HRSound(notif.getPatient().getHRFreq()), (long)amount);
                amount += hr1.getSample().getLength();
                queue.schedule( new RRSound(notif.getPatient().getRRFreq()), (long)amount);
-               amount += hr1.getSample().getLength();
+               amount += rr1.getSample().getLength();
                queue.schedule( new BPDSound(notif.getPatient().getBPSFreq()), (long)amount);
                amount += bp1.getSample().getLength();
                queue.schedule( new BPDSound(notif.getPatient().getBPDFreq()), (long)amount);
-               amount += hr1.getSample().getLength();
-               queue.schedule( new HRSound(notif.getPatient().getBTFreq()), (long)amount);
-               amount += bthot.getSample().getLength();
-               queue.schedule( new HRSound(notif.getPatient().getPLFreq()), (long)amount);
-               amount += pain1.getSample().getLength();
+               amount += bp1.getSample().getLength();
+               if(notif.getPatient().getBTState()==State.Critical || notif.getPatient().getBTState()==State.Moderate){
+                 queue.schedule( new TempSound(notif.getPatient().getBTFreq()), (long)amount);
+                 amount += bthot.getSample().getLength();
+               }
+               if(notif.getPatient().getPLState()==State.Critical){
+                 queue.schedule( new PLSound(notif.getPatient().getPLFreq()), (long)amount);
+                 amount += pain1.getSample().getLength();
+               }
               return amount;
             }
             
@@ -138,8 +145,12 @@ class NotificationHandler {
              return ttsPlayback(notif.getMessage());
            }
            else if(notif.getType()== NotificationType.Alert){//alert for when vitals go too far. get the notif.getVitalType(), then notif.getPatient().getState() to determine how critical, then present sound to emt
+           
               Timer queue = new Timer();
               double amount = 0;
+              if(patientList.size()>2){
+                amount += ttsPlayback(Integer.toString(notif.getPatientID()));
+              }
              switch(notif.getVitalType()){
                case BPS:
                  queue.schedule( new BPDSound(notif.getPatient().getBPSFreq()), (long)amount);
@@ -147,7 +158,7 @@ class NotificationHandler {
                    return amount;
                case BPD:
                  queue.schedule( new BPDSound(notif.getPatient().getBPDFreq()), (long)amount);
-                   amount += hr1.getSample().getLength();
+                   amount += bp1.getSample().getLength();
                    return amount;
                case HR:
                 
@@ -157,15 +168,15 @@ class NotificationHandler {
 
                case RR:
                    queue.schedule( new RRSound(notif.getPatient().getRRFreq()), (long)amount);
-                   amount += hr1.getSample().getLength();
+                   amount += rr1.getSample().getLength();
                    return amount;
                  
                case BT:
-                 queue.schedule( new HRSound(notif.getPatient().getBTFreq()), (long)amount);
+                 queue.schedule( new TempSound(notif.getPatient().getBTFreq()), (long)amount);
                    amount += bthot.getSample().getLength();
                    return amount;
                case PL:
-                 queue.schedule( new HRSound(notif.getPatient().getPLFreq()), (long)amount);
+                 queue.schedule( new PLSound(notif.getPatient().getPLFreq()), (long)amount);
                    amount += pain1.getSample().getLength();
                    return amount;
              }
@@ -258,7 +269,7 @@ class NotificationHandler {
       freq = frequ;
     }
     public void run() {
-     Glide pitchValue1;
+       Glide pitchValue1;
         pitchValue1 = new Glide(ac, freq, 50);
         rr1.setPitch(pitchValue1);
         rr1.setToLoopStart();
@@ -272,6 +283,9 @@ class NotificationHandler {
       freq = frequ;
   }
     public void run() {
+        Glide pitchValue1;
+        pitchValue1 = new Glide(ac, freq, 50);
+        bthot.setPitch(pitchValue1);
         bthot.setToLoopStart();
         bthot.start();
     }
@@ -283,14 +297,25 @@ class NotificationHandler {
       freq = frequ;
   }
     public void run() {
-       Glide pitchValue1;
-        pitchValue1 = new Glide(ac, freq, 50);
-        hr1.setPitch(pitchValue1);
-        hr1.setToLoopStart();
-        hr1.start();
+       //Glide pitchValue1;
+       // pitchValue1 = new Glide(ac, freq, 50);
+       // pain1.setPitch(pitchValue1);
+        pain1.setToLoopStart();
+        pain1.start();
     }
   }
   
-  
+  public String patientsFound(){
+    String out = "";
+     for(Map.Entry m:patientList.entrySet()){  
+           if((int)m.getKey() > 0){
+             out = out +  Integer.toString((int)m.getKey()) + " ";
+           };  
+        } 
+        if(out !=""){
+        return out;
+        }
+        else{return "none found";}
+  }
   
 }

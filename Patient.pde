@@ -90,14 +90,14 @@ class Patient {
       switch (modifier){
         case Critical:
           if(BTemp>100){
-            return 2.0 + ((float)BTemp-100)/10;
+            return 1.2 + ((float)BTemp-100)/10;
           }
           else{
             return 0.4;
           }
         case Moderate:
           if(BTemp>100){
-            return 1.5 + ((float)BTemp-100)/10;
+            return 1.1 + ((float)BTemp-100)/10;
           }
           else{
             return 0.6;
