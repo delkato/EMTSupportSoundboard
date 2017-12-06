@@ -11,7 +11,7 @@ BiquadFilter biFilter;
 
 //declare global variables at the top of your sketch
 //AudioContext ac; is declared in helper_functions
-SamplePlayer bp1, btcold, bthot, hr1, pain1, rr1, feedback;
+SamplePlayer bp1, btcold, bthot, hr1,hr2, pain1, rr1, feedback;
 ControlP5 cp5;
 Patient patient1,patient2,patient3;
 Gain g;// master gain
@@ -47,6 +47,7 @@ void setup() {
   btcold = getSamplePlayer("temp.wav");
   bthot = getSamplePlayer("temp.wav");
   hr1 = getSamplePlayer("hr1.wav");
+  hr2 = getSamplePlayer("hr1.wav");
   pain1 = getSamplePlayer("painWave.wav");
   rr1 = getSamplePlayer("rr1.wav");
   feedback = getSamplePlayer("feedback.wav");
@@ -428,6 +429,7 @@ void setup() {
   btcold.pause(true);
   bthot.pause(true);
   hr1.pause(true);
+  hr2.pause(true);
   pain1.pause(true);
   rr1.pause(true);
   feedback.pause(true);
@@ -436,6 +438,7 @@ void setup() {
   biFilter.addInput(btcold);
   biFilter.addInput(bthot);
   biFilter.addInput(hr1);
+  biFilter.addInput(hr2);
   biFilter.addInput(pain1);
   biFilter.addInput(rr1);
   biFilter.addInput(feedback);
