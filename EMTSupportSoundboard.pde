@@ -736,7 +736,7 @@ public void removeVitalFocus() {
   if(play) {
       confirm.setToLoopStart();
        Glide pitchValue1;
-        pitchValue1 = new Glide(ac, 1.1, 50);
+        pitchValue1 = new Glide(ac, 0.9, 50);
         confirm.setPitch(pitchValue1);
         confirm.start();  
     }
