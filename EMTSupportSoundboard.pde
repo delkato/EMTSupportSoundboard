@@ -12,15 +12,19 @@ import java.util.TimerTask;
 SamplePlayer bp1, btcold, bthot, hr1, pain1, rr1, feedback;
 ControlP5 cp5;
 Patient patient1,patient2,patient3;
-Glide BPSysGlide, BPDiasGlide, HRGlide, RRGlide, BTGlide, PainGlide;
-Glide BPSysGlide2, BPDiasGlide2, HRGlide2, RRGlide2, BTGlide2, PainGlide2;
-Glide BPSysGlide3, BPDiasGlide3, HRGlide3, RRGlide3, BTGlide3, PainGlide3;
+//Glide BPSysGlide, BPDiasGlide, HRGlide, RRGlide, BTGlide, PainGlide;
+//Glide BPSysGlide2, BPDiasGlide2, HRGlide2, RRGlide2, BTGlide2, PainGlide2;
+//Glide BPSysGlide3, BPDiasGlide3, HRGlide3, RRGlide3, BTGlide3, PainGlide3;
+
+int BPSysValue, BPDiasValue, HRValue, RRValue,  PainValue;
+int BPSysValue2, BPDiasValue2, HRValue2, RRValue2,  PainValue2;
+int BPSysValue3, BPDiasValue3, HRValue3, RRValue3,  PainValue3;
+float BTValue, BTValue2,BTValue3;
 CheckBox patientCheckBox;
 public static Comparator<Notification> idComparator;
-ArrayList<Notification> notifications;
-
+NotificationHandler Handler;
 CheckBox patientBox, vitalBox;
-
+Sensor sensor1,sensor2,sensor3;
 //end global variables
 
 //runs once when the Play button above is pressed
@@ -28,16 +32,9 @@ void setup() {
   size(1280, 720); //size(width, height) must be the first line in setup()
   ac = new AudioContext(); //AudioContext ac; is declared in helper_functions
   cp5 = new ControlP5(this);
-  
+  Handler = new NotificationHandler();
 
-  idComparator = new Comparator<Notification>(){
-      @Override
-      public int compare(Notification c1, Notification c2) {
-        if(  c1.getPriorityLevel()>c2.getPriorityLevel()) {  return -1;  }
-        else if (  c1.getPriorityLevel()<c2.getPriorityLevel()){  return 1; }
-              else{  return 0;}  
-      }
-    };
+
   
   bp1 = getSamplePlayer("bp1.wav");
   btcold = getSamplePlayer("btcold.wav");
@@ -47,24 +44,24 @@ void setup() {
   rr1 = getSamplePlayer("rr1.wav");
   feedback = getSamplePlayer("feedback.wav");
   
-  BPSysGlide = new Glide(ac, 0.0, 50);
-  BPDiasGlide = new Glide(ac, 0.0, 50);
-  HRGlide = new Glide(ac, 0.0, 50);
-  RRGlide = new Glide(ac, 0.0, 50);
-  BTGlide = new Glide(ac, 0.0, 50);
-  PainGlide = new Glide(ac, 0.0, 50);
-  BPSysGlide2 = new Glide(ac, 0.0, 50);
-  BPDiasGlide2 = new Glide(ac, 0.0, 50);
-  HRGlide2 = new Glide(ac, 0.0, 50);
-  RRGlide2 = new Glide(ac, 0.0, 50);
-  BTGlide2 = new Glide(ac, 0.0, 50);
-  PainGlide2 = new Glide(ac, 0.0, 50);
-  BPSysGlide3 = new Glide(ac, 0.0, 50);
-  BPDiasGlide3 = new Glide(ac, 0.0, 50);
-  HRGlide3 = new Glide(ac, 0.0, 50);
-  RRGlide3 = new Glide(ac, 0.0, 50);
-  BTGlide3 = new Glide(ac, 0.0, 50);
-  PainGlide3 = new Glide(ac, 0.0, 50);
+  //BPSysGlide = new Glide(ac, 0.0, 50);
+  //BPDiasGlide = new Glide(ac, 0.0, 50);
+  //HRGlide = new Glide(ac, 0.0, 50);
+  //RRGlide = new Glide(ac, 0.0, 50);
+  //BTGlide = new Glide(ac, 0.0, 50);
+  //PainGlide = new Glide(ac, 0.0, 50);
+  //BPSysGlide2 = new Glide(ac, 0.0, 50);
+  //BPDiasGlide2 = new Glide(ac, 0.0, 50);
+  //HRGlide2 = new Glide(ac, 0.0, 50);
+  //RRGlide2 = new Glide(ac, 0.0, 50);
+  //BTGlide2 = new Glide(ac, 0.0, 50);
+  //PainGlide2 = new Glide(ac, 0.0, 50);
+  //BPSysGlide3 = new Glide(ac, 0.0, 50);
+  //BPDiasGlide3 = new Glide(ac, 0.0, 50);
+  //HRGlide3 = new Glide(ac, 0.0, 50);
+  //RRGlide3 = new Glide(ac, 0.0, 50);
+  //BTGlide3 = new Glide(ac, 0.0, 50);
+  //PainGlide3 = new Glide(ac, 0.0, 50);
   
   //User Input Side
   cp5.addButton("addPatient")
@@ -199,7 +196,7 @@ void setup() {
   cp5.addSlider("RRSlider1")
     .setPosition(1120,10)
     .setSize(15,100)
-    .setRange(0,30)
+    .setRange(0,70)
     .setValue(12)
     .setLabel("RR")
     ;
@@ -216,7 +213,7 @@ void setup() {
     .setPosition(1205,10)
     .setSize(15,100)
     .setRange(0,10)
-    .setValue(5)
+    .setValue(0)
     .setLabel("Pain")
     ;
    cp5.addCheckBox("Afflictions1")
@@ -285,7 +282,7 @@ void setup() {
   cp5.addSlider("RRSlider2")
     .setPosition(1120,260)
     .setSize(15,100)
-    .setRange(0,30)
+    .setRange(0,70)
     .setValue(12)
     .setLabel("RR")
     ;
@@ -302,7 +299,7 @@ void setup() {
     .setPosition(1205,260)
     .setSize(15,100)
     .setRange(0,10)
-    .setValue(5)
+    .setValue(0)
     .setLabel("Pain")
     ;
    cp5.addCheckBox("Afflictions2")
@@ -370,7 +367,7 @@ void setup() {
   cp5.addSlider("RRSlider3")
     .setPosition(1120,510)
     .setSize(15,100)
-    .setRange(0,30)
+    .setRange(0,70)
     .setValue(12)
     .setLabel("RR")
     ;
@@ -387,7 +384,7 @@ void setup() {
     .setPosition(1205,510)
     .setSize(15,100)
     .setRange(0,10)
-    .setValue(5)
+    .setValue(0)
     .setLabel("Pain")
     ;
   cp5.addCheckBox("Afflictions3")
@@ -405,13 +402,15 @@ void setup() {
 
   //ac.out.addInput();
   
-  patient1 = new Patient(1, (int)BPSysGlide.getValue(), (int)BPDiasGlide.getValue(),(int)HRGlide.getValue(), (int)RRGlide.getValue(), BTGlide.getValue(), (int)PainGlide.getValue());
-  patient2 = new Patient(2, (int)BPSysGlide2.getValue(), (int)BPDiasGlide2.getValue(),(int)HRGlide2.getValue(), (int)RRGlide2.getValue(), BTGlide2.getValue(), (int)PainGlide2.getValue());
-  patient3 = new Patient(3, (int)BPSysGlide3.getValue(), (int)BPDiasGlide3.getValue(),(int)HRGlide3.getValue(), (int)RRGlide3.getValue(), BTGlide3.getValue(), (int)PainGlide3.getValue());
-  
-  Glide BPSysGlide, BPDiasGlide, HRGlide, RRGlide, BTGlide, PainGlide;
-  Glide BPSysGlide2, BPDiasGlide2, HRGlide2, RRGlide2, BTGlide2, PainGlide2;
-  Glide BPSysGlide3, BPDiasGlide3, HRGlide3, RRGlide3, BTGlide3, PainGlide3;
+  patient1 = new Patient(1, (int)BPSysValue, (int)BPDiasValue,(int)HRValue, (int)RRValue, BTValue, (int)PainValue,0);
+  patient2 = new Patient(2, (int)BPSysValue2, (int)BPDiasValue2,(int)HRValue2, (int)RRValue2, BTValue2, (int)PainValue2,1);
+  patient3 = new Patient(3, (int)BPSysValue3, (int)BPDiasValue,(int)HRValue, (int)RRValue3, BTValue3, (int)PainValue3,2);
+  sensor1 = new Sensor(patient1);
+  sensor2 = new Sensor(patient2);
+  sensor3 = new Sensor(patient3);
+  patient1.setSensor(sensor1);
+  patient2.setSensor(sensor2);
+  patient3.setSensor(sensor3);
   
   bp1.pause(true);
   btcold.pause(true);
@@ -437,105 +436,116 @@ void draw() {
 }
 
 public void BPSysSlider1(int newGain) {
-  BPSysGlide.setValue(newGain/100.0);
+  BPSysValue=(int) newGain;
 }
 
 public void BPDiasSlider1(int newGain) {
-  BPDiasGlide.setValue(newGain/100.0);
+  BPDiasValue=(int) newGain;
 }
 
 public void HRSlider1(int newGain) {
-  HRGlide.setValue(newGain/100.0);
+  HRValue=(int) newGain;
 }
 
 public void RRSlider1(int newGain) {
-  RRGlide.setValue(newGain/100.0);
+  RRValue = (int) newGain;
 }
 
 public void BTSlider1(float newGain) {
-  BTGlide.setValue(newGain/100.0);
+  BTValue =newGain;
 }
 
 public void PainSlider1(int newGain) {
-  PainGlide.setValue(newGain/100.0);
+  PainValue=(int) newGain;
 }
 public void BPSysSlider2(int newGain) {
-  BPSysGlide2.setValue(newGain/100.0);
+  BPSysValue2=(int) newGain;
 }
 
 public void BPDiasSlider2(int newGain) {
-  BPDiasGlide2.setValue(newGain/100.0);
+  BPDiasValue2=(int) newGain;
 }
 
 public void HRSlider2(int newGain) {
-  HRGlide2.setValue(newGain/100.0);
+  HRValue2=(int) newGain;
 }
 
 public void RRSlider2(int newGain) {
-  RRGlide2.setValue(newGain/100.0);
+  RRValue2 = (int) newGain;
 }
 
 public void BTSlider2(float newGain) {
-  BTGlide2.setValue(newGain/100.0);
+  BTValue2 =newGain;
 }
 
 public void PainSlider2(int newGain) {
-  PainGlide2.setValue(newGain/100.0);
+  PainValue2=(int) newGain;
 }
 public void BPSysSlider3(int newGain) {
-  BPSysGlide3.setValue(newGain/100.0);
+  BPSysValue3=(int) newGain;
 }
 
 public void BPDiasSlider3(int newGain) {
-  BPDiasGlide3.setValue(newGain/100.0);
+  BPDiasValue3=(int) newGain;
 }
 
 public void HRSlider3(int newGain) {
-  HRGlide3.setValue(newGain/100.0);
+  HRValue3=(int) newGain;
 }
 
 public void RRSlider3(int newGain) {
-  RRGlide3.setValue(newGain/100.0);
+  RRValue3 = (int) newGain;
 }
 
 public void BTSlider3(float newGain) {
-  BTGlide3.setValue(newGain/100.0);
+  BTValue3 =newGain;
 }
 
 public void PainSlider3(int newGain) {
-  PainGlide3.setValue(newGain/100.0);
+  PainValue3=(int) newGain;
 }
-public void healthButton1() {
-  patient1.setSystolicBloodPressure((int)BPSysGlide.getValue());
-  patient1.setDiastolicBloodPressure((int)BPDiasGlide.getValue());
-  patient1.setHeartRate((int)HRGlide.getValue());
-  patient1.setRespiratoryRate((int)RRGlide.getValue());
-  patient1.setBodyTemperature((int)BTGlide.getValue());
-  patient1.setPainLevel((int)PainGlide.getValue());
+public void HealthButton1() {
+  patient1.setSystolicBloodPressure((int)BPSysValue);
+  patient1.setDiastolicBloodPressure((int)BPDiasValue);
+  patient1.setHeartRate((int)HRValue);
+  patient1.setRespiratoryRate((int)RRValue);
+  patient1.setBodyTemperature(BTValue);
+  patient1.setPainLevel((int)PainValue);
+  println("changed patient " + patient1.getPatientID());
+
 }
-public void healthButton2() {
-  patient2.setSystolicBloodPressure((int)BPSysGlide2.getValue());
-  patient2.setDiastolicBloodPressure((int)BPDiasGlide2.getValue());
-  patient2.setHeartRate((int)HRGlide2.getValue());
-  patient2.setRespiratoryRate((int)RRGlide2.getValue());
-  patient2.setBodyTemperature((int)BTGlide2.getValue());
-  patient2.setPainLevel((int)PainGlide2.getValue());
+public void HealthButton2() {
+  patient2.setSystolicBloodPressure((int)BPSysValue2);
+  patient2.setDiastolicBloodPressure((int)BPDiasValue2);
+  patient2.setHeartRate((int)HRValue2);
+  patient2.setRespiratoryRate((int)RRValue2);
+  patient2.setBodyTemperature(BTValue2);
+  patient2.setPainLevel((int)PainValue2);
+  println("changed patient " + patient2.getPatientID());
 }
-public void healthButton3() {
-  patient3.setSystolicBloodPressure((int)BPSysGlide3.getValue());
-  patient3.setDiastolicBloodPressure((int)BPDiasGlide3.getValue());
-  patient3.setHeartRate((int)HRGlide3.getValue());
-  patient3.setRespiratoryRate((int)RRGlide3.getValue());
-  patient3.setBodyTemperature((int)BTGlide3.getValue());
-  patient3.setPainLevel((int)PainGlide3.getValue());
+public void HealthButton3() {
+  patient3.setSystolicBloodPressure((int)BPSysValue3);
+  patient3.setDiastolicBloodPressure((int)BPDiasValue3);
+  patient3.setHeartRate((int)HRValue3);
+  patient3.setRespiratoryRate((int)RRValue3);
+  patient3.setBodyTemperature(BTValue3);
+  patient3.setPainLevel((int)PainValue3);
+  println("changed patient " + patient3.getPatientID());
 }
 
 public void addPatient() {
-  if (patientCheckBox.getState(10) == true) {
-    
-  }
+  for(int i = 0; i < 3; i++){
+    if(patientCheckBox.getArrayValue()[i] == 1) {
+      Handler.addPatient(i+1);
+    }
+  } 
 }
 public void removePatient() {
+  for(int i = 0; i < 3; i++){
+    if(patientCheckBox.getArrayValue()[i] == 1) {
+      Handler.removePatient(i+1);
+    }
+  } 
 }
 public void patientFocus() {
 }

@@ -10,7 +10,7 @@ class Patient {
   int patientID;
   Sensor sensor;
   
-  public Patient(int patientID, int BPS, int BPD, int HR, int RR, float BT, int PL){
+  public Patient(int patientID, int BPS, int BPD, int HR, int RR, float BT, int PL, int ID){
     this.patientID = patientID;
     BPSys = BPS;
     BPDias = BPD;
@@ -18,7 +18,8 @@ class Patient {
     RRate = RR;
     BTemp = BT;
     PLevel = PL;
-    sensor = new Sensor(this);
+    patientID = ID;
+    //sensor = new Sensor(this);
   }
   public int getSystolicBloodPressure() { return BPSys; }
   public int getDiastolicBloodPressure() { return BPDias; }
@@ -29,13 +30,14 @@ class Patient {
   public int getPatientID() { return patientID; }
   public Sensor getSensor() { return sensor; }
   
+  
   public void setSystolicBloodPressure(int BPSys) { this.BPSys = BPSys; }
   public void setDiastolicBloodPressure(int BPDias) { this.BPDias = BPDias; }
   public void setHeartRate(int HRate) { this.HRate = HRate; }
   public void setRespiratoryRate(int RRate) { this.RRate = RRate; }
   public void setBodyTemperature(float BTemp) { this.BTemp = BTemp; }
   public void setPainLevel(int PLevel) { this.PLevel = PLevel; }
-  
+  public void setSensor(Sensor sensor) { this.sensor = sensor; }
   //immediate update of values
   public void updateVital(VitalType vital, float input) {
     switch (vital){
@@ -166,6 +168,7 @@ class Patient {
       } 
   }
   public State getHRState() { 
+    println(HRate);
     if (HRate > 140) { 
           if(HRate > 180) {
             return State.Critical; //hypertensive crisis

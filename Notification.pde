@@ -29,6 +29,7 @@ class Notification {
     this.message = message;
     this.vital = vital;
     this.intensity = intensity;
+    println("created notification for patient "+ patientID  + " of priority " + priority + " of Type " + vital.name() );
   }
   public NotificationType getType() { return type; }
   public String getMessage() { return message; }
