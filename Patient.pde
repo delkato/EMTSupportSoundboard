@@ -19,7 +19,6 @@ class Patient {
     BTemp = BT;
     PLevel = PL;
     patientID = ID;
-    //sensor = new Sensor(this);
   }
   public int getSystolicBloodPressure() { return BPSys; }
   public int getDiastolicBloodPressure() { return BPDias; }

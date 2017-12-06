@@ -297,9 +297,6 @@ class NotificationHandler {
       freq = frequ;
   }
     public void run() {
-       //Glide pitchValue1;
-       // pitchValue1 = new Glide(ac, freq, 50);
-       // pain1.setPitch(pitchValue1);
         pain1.setToLoopStart();
         pain1.start();
     }
