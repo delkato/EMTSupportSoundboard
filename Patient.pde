@@ -168,7 +168,6 @@ class Patient {
       } 
   }
   public State getHRState() { 
-    println(HRate);
     if (HRate > 140) { 
           if(HRate > 180) {
             return State.Critical; //hypertensive crisis

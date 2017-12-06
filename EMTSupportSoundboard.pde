@@ -1,3 +1,5 @@
+import guru.ttslib.*;
+
 import controlP5.*;
 import beads.*;
 import org.jaudiolibs.beads.*;
@@ -20,7 +22,7 @@ int BPSysValue, BPDiasValue, HRValue, RRValue,  PainValue;
 int BPSysValue2, BPDiasValue2, HRValue2, RRValue2,  PainValue2;
 int BPSysValue3, BPDiasValue3, HRValue3, RRValue3,  PainValue3;
 float BTValue, BTValue2,BTValue3;
-CheckBox patientCheckBox;
+CheckBox patientCheckBox,vitalCheckBox;
 public static Comparator<Notification> idComparator;
 NotificationHandler Handler;
 CheckBox patientBox, vitalBox;
@@ -102,7 +104,7 @@ void setup() {
    .setSize(100,30)
    .setLabel("Remove Vital Focus");
   
-  cp5.addCheckBox("vitalCheckBox")
+  vitalCheckBox = cp5.addCheckBox("vitalCheckBox")
     .setPosition(250, 220)
     .setColorForeground(color(120))
     .setColorActive(color(255))
@@ -116,7 +118,11 @@ void setup() {
     .addItem("RespiratoryRate", 2)
     .addItem("BodyTemperature", 3)
     .addItem("PainLevel", 4);
-    
+  
+  cp5.addButton("summary")
+   .setPosition(100,300)
+   .setSize(100,30)
+   .setLabel("summary");
    
   cp5.addButton("addNotes")
    .setPosition(100,360)
@@ -521,7 +527,7 @@ public void HealthButton2() {
   patient2.setRespiratoryRate((int)RRValue2);
   patient2.setBodyTemperature(BTValue2);
   patient2.setPainLevel((int)PainValue2);
-  println("changed patient " + patient2.getPatientID());
+  println(" patient " + patient2.getPatientID());
 }
 public void HealthButton3() {
   patient3.setSystolicBloodPressure((int)BPSysValue3);
@@ -548,16 +554,69 @@ public void removePatient() {
   } 
 }
 public void patientFocus() {
+  for(int i = 0; i < 3; i++){
+    if(patientCheckBox.getArrayValue()[i] == 1) {
+      Handler.addPatient(i+1);
+    }
+  } 
 }
 public void patientCheckBox() {
 }
 public void vitalFocus() {
+  for(int i = 0; i < 5; i++){
+    if(vitalCheckBox.getArrayValue()[i] == 1) {
+      switch(i){
+        case 0: Handler.addVital(VitalType.BPD);
+                Handler.addVital(VitalType.BPS);
+                break;
+        case 1: Handler.addVital(VitalType.HR);
+        break;
+        case 2:Handler.addVital(VitalType.RR);
+        break;
+        case 3:Handler.addVital(VitalType.BT);
+        break;
+        case 4:Handler.addVital(VitalType.PL);
+        break;
+      }
+    }
+  }
 }
 public void removeVitalFocus() {
+  for(int i = 0; i < 5; i++){
+    if(vitalCheckBox.getArrayValue()[i] == 1) {
+      switch(i){
+        case 0: Handler.removeVital(VitalType.BPD);
+                Handler.removeVital(VitalType.BPS);
+                break;
+        case 1: Handler.removeVital(VitalType.HR);
+        break;
+        case 2:Handler.removeVital(VitalType.RR);
+        break;
+        case 3:Handler.removeVital(VitalType.BT);
+        break;
+        case 4:Handler.removeVital(VitalType.PL);
+        break;
+      }
+    }
+  }
 }
+
+
 public void vitalCheckBox() {
 }
 public void addNotes() {
+  Notification notifi = new Notification(NotificationType.SystemResponse,  00, 5,"Report Created");
+  Handler.notificationReceived(notifi);
 }
 public void sendNotes() {
+  Notification notifi = new Notification(NotificationType.SystemResponse,  00, 5,"Report Sent");
+  Handler.notificationReceived(notifi);
+}
+public void summary() {
+  Notification notifi1 = new Notification(NotificationType.StatusUpdate,  patient1, patient1.getPatientID(), 1, false, "", VitalType.RR, patient1.getPainLevel());
+  Handler.notificationReceived(notifi1);
+  Notification notifi2 = new Notification(NotificationType.StatusUpdate,  patient2, patient2.getPatientID(), 1, false, "", VitalType.RR, patient2.getPainLevel());
+  Handler.notificationReceived(notifi2);
+  Notification notifi3 = new Notification(NotificationType.StatusUpdate,  patient3, patient3.getPatientID(), 1, false, "", VitalType.RR, patient3.getPainLevel());
+  Handler.notificationReceived(notifi3);
 }
